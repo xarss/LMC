@@ -1,0 +1,82 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!--Imports-->
+    <script src="scripts/main.js" defer></script>
+    <script src="scripts/setup.js" defer></script>
+    <link rel="stylesheet" href="style.css">
+
+    <title>LMC</title>
+</head>
+<body>
+    <!--Header-->
+    <div class="toolbar">
+        <span> Little Man Computer </span>
+        <span class="spacer"></span>
+        <span style="font-size: small;"> Color: </span>
+        <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">
+        <span style="font-size: small;"> by: Chico & Arthur </span>
+    </div>
+    
+    <!--Body-->
+    <div class="lmc">
+
+        <!--Console-->
+        <div class="terminal"> 
+            <div class="cardHead">
+                <span>Terminal</span>
+                <button type="submit" onclick="compile()" class="runButton">Run</button>
+            </div>
+             <div class="cardBody">
+                <textarea name="code" id="code" cols="30" rows="10" class="code"></textarea>
+             </div>
+        </div>
+
+
+        <!--Processing Center-->
+        <div class="proc">
+            <div class="cardHead">
+                <span>Processing Center</span>
+            </div>
+            
+            <div class="cardBody">
+                <div class="configs">
+                    <span class="centered">Accumulator</span>
+                    <input id="accum" value="000" class="accInput">
+                </div>
+                <!--Console-->
+                <div class="cardHead">
+                    <span>Input</span>
+                </div>
+                <div class="cardHalf">
+                    <textarea name="code" id="input" cols="30" rows="10" class="code"></textarea>
+                </div>
+                <div class="cardHead">
+                    <span>Output</span>
+                </div>
+                <div class="cardHalf">
+                    <textarea name="code" id="output" cols="30" rows="10" class="code"></textarea>
+                </div>
+            </div>
+
+            
+            
+        </div>
+
+        <!--RAM-->
+        <div class="randomAcessMemory">
+            <div class="cardHead">
+                <span>Random Access Memory</span>
+            </div>
+            <div class="cardBody">
+                <div id="slots" class="slots"></div>
+            </div>
+            
+        </div>
+
+    </div>
+</body>
+</html>

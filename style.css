@@ -1,0 +1,215 @@
+/* Variables */
+:root
+{
+    --main:      rgb(50, 50, 55);
+    --secondary: rgb(70, 77, 123);
+}
+
+html
+{
+    color: white;
+}
+
+body
+{
+    margin: 0;
+    overflow: hidden;
+    background-color: rgb(35, 35, 35);
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.cardHead
+{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 7%;
+}
+
+.cardBody
+{
+    width: 100%;
+    height: 93%;
+}
+
+.spacer
+{
+    flex-grow: 1;
+}
+
+.lmc
+{
+    height: calc(100% - 60px);
+    padding: 20px;
+    display: flex;
+}
+
+.terminal
+{
+    height: calc(100% - 60px);
+    width: 20%;
+    border-radius: 10px;
+    background-color: var(--main);
+}
+
+.runButton
+{
+    margin-left: 10px;
+    background-color: var(--secondary);
+    border: solid 1px;
+    border-radius: 10px;
+    border-color: white;
+    color: white;
+}
+
+.runButton:hover
+{
+    cursor: pointer;
+}
+
+.proc
+{
+    margin-left: 20px;
+    height: calc(100% - 60px);
+    width: calc(25% + 40px);
+    border-radius: 10px;
+    background-color: var(--main);
+}
+
+.randomAcessMemory
+{
+    height: calc(100% - 60px);
+    margin-left: 20px;
+    width: calc(55% - 80px);
+    border-radius: 10px;
+    background-color: var(--main);
+}
+
+.toolbar
+{
+    margin: 0;
+    padding: 0 20px 0 20px;
+    height: 60px;
+    display: flex;
+    font-size: large;
+    align-items: center;
+    background-color: var(--secondary);
+}
+
+.code
+{
+    resize: none;
+    font-size: large;
+    background-color: transparent;
+    border: solid 1px;
+    border-radius: 5px;
+    color: white;
+    border-color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.slot
+{
+    width: calc(100%/10);
+    height: calc(100%/10);
+    padding: 0;
+    background-color: transparent;
+    border: solid 1px;
+    border-color: white;
+    border-radius: 5px;
+}
+
+.slots{
+    width: 100%;
+    height: 100%;
+}
+
+.cacheTable
+{
+    width: 100%;
+    height: 100%;
+}
+
+.slotHeader
+{
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    user-select: none;
+    height: 40%;
+    width: 100%;
+    display: flex;
+    font-size: small;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--secondary);
+}
+
+.color
+{
+    border: none;
+    background-color: transparent;
+    margin-right: 2%;
+}
+
+.slotBody
+{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60%;
+    width: 100%;
+}
+
+.clearInput
+{
+    border: solid 1px;
+    border-radius: 5px;
+    border-color: rgb(76, 76, 76);
+    text-align: center;
+    color: rgb(174, 174, 174);
+    width: 60%;
+    background-color: transparent;
+}
+
+.clearInput:hover
+{
+    cursor:default;
+}
+
+.configs
+{
+    height: 8%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.accInput
+{
+    text-align: center;
+    width: 25%;
+    height: max-content;
+    background-color: transparent !important; 
+    color: white;
+    border: solid 1px;
+    background-color: white;
+    border-radius: 10px;
+}
+
+.centered
+{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.cardHalf
+{
+    width: 100%;
+    height: 39%;
+}
