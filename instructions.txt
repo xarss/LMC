@@ -1,3 +1,0 @@
-Seu objetivo será desenvolver uma versão do Little Man Computer, em javascript, em um site
-estático no Github, compatível com a linguagem do Little Man Computer que, além de conter um
-cache para 4 instruções tenha uma pipeline de 4 estágios, também visível.
