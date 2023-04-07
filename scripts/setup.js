@@ -24,6 +24,17 @@ document.getElementById('code').addEventListener('keydown', function(e) {
     }
 });
 
+function Overlay() {
+    let current = document.getElementById("overlay").style.display;
+    if (current == "block")
+    {
+        document.getElementById("overlay").style.display = "none";
+    }
+    else
+    {
+        document.getElementById("overlay").style.display = "block";
+    }
+}
 
 function slotter(index)
 {
@@ -57,6 +68,7 @@ function slotter(index)
 function generateGrid()
 {
     var body = document.getElementById("slots");
+    body.innerHTML = "";
     var table = document.createElement("table");
     // Set class for table
     table.className = "cacheTable";
@@ -82,4 +94,87 @@ function changeColor()
     css.style.setProperty("--secondary", color)
 }
 
+function generateInfoTable()
+{
+    let table = document.getElementById("info-table");
+    let contentHead = ["Command name", "Syntax", "Description"]
+    let contentBody = [
+    {
+        "command_name": "Input",
+        "syntax": "INP",
+        "description": "Gets an input from user." 
+    },
+    {
+        "command_name": "Output",
+        "syntax": "OUT",
+        "description": "Outputs the accumulator's value on the output terminal." 
+    },
+    {
+        "command_name": "Add",
+        "syntax": "ADD [value]",
+        "description": "Adds the specified value to the accumulator." 
+    },
+    {
+        "command_name": "Subtract",
+        "syntax": "SUB [value]",
+        "description": "Subtracts the specified value to the accumulator." 
+    },
+    {
+        "command_name": "Load",
+        "syntax": "LDA [memory address]",
+        "description": "Loads the accumulator with the content stored at the given memory address." 
+    },
+    {
+        "command_name": "Store",
+        "syntax": "STA [memory address]",
+        "description": "Stores the accumulator's value inside the given memory address." 
+    },
+    {
+        "command_name": "Branch Always",
+        "syntax": "BRA [label]",
+        "description": "Jump to given label." 
+    },
+    {
+        "command_name": "Branch If Positive",
+        "syntax": "BRP [label]",
+        "description": "Jump to given label if the content in the accumulator is positive." 
+    },
+    {
+        "command_name": "Branch If Zero",
+        "syntax": "BRZ [label]",
+        "description": "Jump to given label if the content in the accumulator is equal to zero." 
+    },
+    {
+        "command_name": "Halt",
+        "syntax": "HLT",
+        "description": "Stops the code." 
+    },
+    {
+        "command_name": "Data Location",
+        "syntax": "DAT [name] [value]",
+        "description": "Associate a label to a memory address, if given a value, it will store it in memory. (value is optional)" 
+    }
+    ]
+    
+    const tableHead = document.getElementById("info-table-head");
+    const tableBody = document.getElementById("info-table-body");
+    tableHead.innerHTML = "<tr><th>Command Name</th><th>Syntax</th><th>Description</th</tr>";
+
+    contentBody.forEach(element => 
+    {
+        tableBody.innerHTML += 
+        "<tr>"+
+        `<td>${element.command_name}</td>`+
+        `<td>${element.syntax}</td>`+
+        `<td>${element.description}</td>`+
+        "</tr>";
+    });
+
+}
+
+//Define initial clock speed
+document.getElementById("current-clock-speed").innerHTML = 200;
+
+
+generateInfoTable();
 generateGrid();

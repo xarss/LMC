@@ -1,16 +1,12 @@
 var variables = {};
 var labels    = {};
-var functions = {};
-
+const functions = {};
 var pos = 0;
 
 // --- Funções que representam as keywords do little man --- //
 
 functions.LABEL = function(param) {
-    position = param[0]
-    nam = param[1]
-    labels[nam] = position;
-    console.log(labels);
+    labels[param[1]] = param[0];
 };
 
 functions.BRA = function(label) {
@@ -29,11 +25,12 @@ functions.BRZ = function(label) {
     }
 };
 
-functions.DAT = function(name) {
+functions.DAT = function(param) {
     position = getRAMSlot();
     if (position != null) {
-        newVar(name, getRAMSlot());
-        document.getElementById("h_"+position).innerHTML = name;
+        newVar(param[0], getRAMSlot());
+        addToRegister(position, param[1]);
+        document.getElementById("h_"+position).innerHTML = param[0];
     }
 }
 
@@ -44,7 +41,7 @@ functions.INP = function() {
 };
 
 functions.OUT = function() {
-    document.getElementById("output").innerHTML += getAccum() + "\n";
+    document.getElementById("output").value += getAccum() + "\n";
 }
 
 functions.HLT = function() {
@@ -87,7 +84,7 @@ function isVariable(variable) {
     return variable;
 }
 
-function addToRegister(index, value)
+function addToRegister(index, value = 0)
 {
     key = "c_" + index.toString();
     document.getElementById(key).value = value;
@@ -138,43 +135,47 @@ function getRAMSlot()
 function newVar(nam, pos)
 {
     variables[nam] = pos;
+    return pos;
 }
 
-function clearRun() {
-    variables = {}
-    labels = {}
-    
+function clearMemory() {
+    document.getElementById("input").value = "";
+    document.getElementById("output").value = "";
+    variables = {};
+    labels = {};
+    pos = 0;
+    generateGrid();
 }
 
-function run(code)
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+async function run(code)
 {
     let size = code.length
     let halt = null;
-    pos = labels["start"];
-    console.log("Pos on start:" + pos);
+    
 
     while(halt == null)
     {
+        await sleep(510 - parseInt(document.getElementById("current-clock-speed").innerHTML));
         let func = code[pos][0];
         let param = code[pos][1];
         halt = functions[func](param);
         pos++;
     }
-    console.log(variables);
+    
     console.log("Programa finalizou execução");
+    console.log(variables)
 }
 
 function process(line, cl)
 {
-    console.log("reading line: " + line);
-    if(line.length > 2)
-    {
-        return null
-    }
     if(line[0].includes(":"))
     {
-        functions.LABEL([cl, line[0].replace(":", "")])
-        return ["LABEL", [cl, line[0].replace(":", "")]];
+        let labelName = line.shift();
+        functions.LABEL([cl - 1, labelName.replace(":", "")])
     }
     if(line.length == 1)
     {
@@ -182,25 +183,30 @@ function process(line, cl)
     }
     if(line[1] == "DAT")
     {
-        return ["DAT", line[0]]
+        line.splice(1, 1);
+        console.log(line)
+        functions.DAT([...line]);
+        return ["DAT", line[0]];
     }
     return line
 }
 
 function compile()
 {
+    clearMemory();
     let raw = document.getElementById("code").value;
     let rawLines = raw.split("\n");
-
-    console.log(rawLines)
+    rawLines = rawLines.filter(function(value) {
+        return value !== "";
+    });
 
     let errors = [];
     let code = [];
     let cleanLine = [];
 
-    let currentLine = 0
+    let currentLine = 0;
     rawLines.forEach(line => {
-        line.trim().split("\t").forEach(word => {
+        line.replace(/\s+/g, " ").trim().split(" ").forEach(word => {
             let w = word.trim();
             w ? cleanLine.push(w) : null;
         });
@@ -222,4 +228,18 @@ function compile()
             console.log(err)
         })
     }
+}
+
+function pasteCodeExample()
+{
+    const codeArea = document.getElementById("code");
+    const codeExample = document.getElementById("code-examples").value;
+    
+    codeArea.value = codes[codeExample];
+}
+
+function changeClockValue()
+{
+    new_value = document.getElementById("slider").value;
+    document.getElementById("current-clock-speed").innerHTML = new_value;
 }
