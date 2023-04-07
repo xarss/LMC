@@ -1,18 +1,18 @@
 codes = {};
 
 codes["add2"] = `\tINP
-STA\tnumber     
-INP     
-ADD\tnumber
-OUT
-HLT\n\nnumber\tDAT`;
+\tSTA\tnumber     
+\tINP     
+\tADD\tnumber
+\tOUT
+\tHLT\n\nnumber\tDAT`;
 
 codes["countdown"] = `\tINP\nloop:\tOUT
-STA\tcount
-SUB\tone
-STA\tcount
-BRP\tloop
-HLT\n\none\tDAT\t1\ncount\tDAT`;
+\tSTA\tcount
+\tSUB\tone
+\tSTA\tcount
+\tBRP\tloop
+\tHLT\n\none\tDAT\t1\ncount\tDAT`;
 
 codes["sort3"] = `\tINP
 \tSTA\tfirst

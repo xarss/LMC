@@ -90,7 +90,30 @@
                     <input type="range" min="10" max="2010" value="50" step="1" id="slider" onchange="changeClockValue()">
                     <span class="centered" id="current-clock-speed"></span>
                 </div>
-                
+                <div class="accum">
+                    <!-- Contador do programa -->
+                    <span class="accHead">PC</span>
+                    <div class="accBody">
+                        <input id="program-counter" value="000" class="clearInput">
+                    </div>
+                    <!-- Guarda a instrução que será executada  -->
+                    <span class="accHead">CIR</span>
+                    <div class="accBody">
+                        <input id="current-instruction-register" value="000" class="clearInput">
+                    </div>
+                    <!-- Guarda um endereço de uma memória que será lida ou escrita -->
+                    <span class="accHead">MAR</span>
+                    <div class="accBody">
+                        <input id="memory-address-register" value="000" class="clearInput">
+                    </div>
+                    <!-- Guarda um valor que foi lido ou será escrito na memória -->
+                    <span class="accHead">MDR</span>
+                    <div class="accBody">
+                        <input id="memory-data-register" value="000" class="clearInput">
+                    </div>
+                </div>
+
+
                 <!--Console-->
                 <div class="cardHalf">
                     
