@@ -22,7 +22,7 @@
         <!--Inactive Color Picker-->
         <!--<span style="font-size: small;"> Color: </span>
         <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">-->
-        <span style="font-size: small; padding-right: 40px;"> Version: 0.51 </span>
+        <span style="font-size: small; padding-right: 40px;"> Version: 0.52 </span>
         <span style="font-size: small;"> by: Chico & Tuza </span>
     </div>
     
@@ -72,47 +72,69 @@
         <div class="proc">
             <div class="cardHead">
                 <span>Processing Center</span>
+                
             </div>
             
+            
+
             <div class="cardBody">
 
-                <!--Configs-->
-                <div class="configs">
-                    <div class="accum">
-                        <span class="accHead">Accumulator</span>
-                        <div class="accBody">
+                <div class="cardHalf">
+                    <div class="halfCard">
+                        <div class="halfHead">
+                            <span>Name</span>
+                        </div>
+
+                        <!--Names-->
+                        <div class="halfRow">
+                            <span> Clock Speed</span>
+                        </div>
+                        <div class="halfRow">
+                            <span> Accumulator</span>
+                        </div>
+                        <div class="halfRow">
+                            <span> PC</span>
+                        </div>
+                        <div class="halfRow">
+                            <span> SIR</span>
+                        </div>
+                        <div class="halfRow">
+                            <span> MAR</span>
+                        </div>
+                        <div class="halfRow">
+                            <span> MDR</span>
+                        </div>
+                    </div>
+                    <div class="halfCard">
+                        <div class="halfHead">
+                            <span>Value</span>
+                        </div>
+
+                        <!--Values-->
+                        <div class="halfRow">
+                            <input type="range" min="10" max="2010" value="50" step="1" id="slider" onchange="changeClockValue()">
+                            <span class="centered" id="current-clock-speed"></span>
+                        </div>
+                        <div class="halfRow">
                             <input id="accum" value="000" class="clearInput">
+                        </div>
+                        <div class="halfRow">
+                            <input id="program-counter" value="000" class="clearInput">
+                        </div>
+                        <div class="halfRow">
+                            <input id="current-instruction-register" value="000" class="clearInput">
+                        </div>
+                        <div class="halfRow">
+                            <input id="memory-address-register" value="000" class="clearInput">
+                        </div>
+                        <div class="halfRow">
+                            <input id="memory-data-register" value="000" class="clearInput">
                         </div>
                     </div>
                 </div>
-                <div class="configs">
-                    <span class="centered">Clock Speed</span>
-                    <input type="range" min="10" max="2010" value="50" step="1" id="slider" onchange="changeClockValue()">
-                    <span class="centered" id="current-clock-speed"></span>
-                </div>
-                <div class="accum">
-                    <!-- Contador do programa -->
-                    <span class="accHead">PC</span>
-                    <div class="accBody">
-                        <input id="program-counter" value="000" class="clearInput">
-                    </div>
-                    <!-- Guarda a instrução que será executada  -->
-                    <span class="accHead">CIR</span>
-                    <div class="accBody">
-                        <input id="current-instruction-register" value="000" class="clearInput">
-                    </div>
-                    <!-- Guarda um endereço de uma memória que será lida ou escrita -->
-                    <span class="accHead">MAR</span>
-                    <div class="accBody">
-                        <input id="memory-address-register" value="000" class="clearInput">
-                    </div>
-                    <!-- Guarda um valor que foi lido ou será escrito na memória -->
-                    <span class="accHead">MDR</span>
-                    <div class="accBody">
-                        <input id="memory-data-register" value="000" class="clearInput">
-                    </div>
-                </div>
 
+                <!--Configs-->
+                
 
                 <!--Console-->
                 <div class="cardHalf">
