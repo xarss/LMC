@@ -14,6 +14,7 @@
     <title>LMC</title>
 </head>
 <body>
+
     <!--Header-->
     <div class="toolbar">
         <span> Little Man Computer </span>
@@ -21,14 +22,14 @@
         <!--Inactive Color Picker-->
         <!--<span style="font-size: small;"> Color: </span>
         <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">-->
-        <span style="font-size: small; padding-right: 40px;"> Version: 0.5 </span>
+        <span style="font-size: small; padding-right: 40px;"> Version: 0.51 </span>
         <span style="font-size: small;"> by: Chico & Tuza </span>
     </div>
     
     <!--Body-->
     <div class="lmc">
 
-        <!--Console-->
+        <!--Terminal-->
         <div class="terminal"> 
             <div class="cardHead">
                 <span>Terminal</span>
@@ -43,10 +44,9 @@
                     <option value="sort3">Sort three numbers</option>
                     <option value="countdown">Countdown timer</option>
                 </select>
-                <button type="submit" onclick="pasteCodeExample()" class="runButton">Import code</button>
             </div>
             <div class="cardHead">
-                <button type="submit" onclick="Overlay()" class="runButton">Show commands</button>
+                <button type="submit" onclick="pasteCodeExample()" class="runButton">Import code</button>
             </div>
         </div>
 
@@ -75,30 +75,54 @@
             </div>
             
             <div class="cardBody">
+
+                <!--Configs-->
                 <div class="configs">
-                    <span class="centered">Accumulator</span>
-                    <input id="accum" value="000" class="accInput">
+                    <div class="accum">
+                        <span class="accHead">Accumulator</span>
+                        <div class="accBody">
+                            <input id="accum" value="000" class="clearInput">
+                        </div>
+                    </div>
                 </div>
                 <div class="configs">
                     <span class="centered">Clock Speed</span>
-                    <input type="range" min="10" max="500" value="50" step="1" id="slider" onchange="changeClockValue()">
+                    <input type="range" min="10" max="2010" value="50" step="1" id="slider" onchange="changeClockValue()">
                     <span class="centered" id="current-clock-speed"></span>
                 </div>
+                
                 <!--Console-->
                 <div class="cardHalf">
+                    
                     <div class="halfCard">
-                        <div class="cardHead">
+                        <div class="halfHead">
                             <span>Input</span> 
                         </div>
-                        <textarea name="code" id="input" cols="30" rows="10" class="code"></textarea>
+                        <div class="halfBody">
+                            <textarea name="code" id="input" cols="30" rows="10" class="code"></textarea>
+                        </div>
                     </div>
+
                     <span class="spacer"></span>
+    
                     <div class="halfCard">
-                        <div class="cardHead">
+                        <div class="halfHead">
                             <span>Output</span> 
                         </div>
-                        <textarea name="code" id="output" cols="30" rows="10" class="code"></textarea>
+                        <div class="halfBody">
+                            <textarea name="code" id="output" cols="30" rows="10" class="code"></textarea>
+                        </div>
                     </div>
+                </div>
+                <div class="cardHead">
+                    <span>Console</span>
+                </div>
+                <div class="cardHalf">
+                    <textarea name="code" id="console" cols="30" rows="10" class="code"></textarea>
+                </div>
+                <div class="cardHead">
+                    <button type="submit" onclick="Overlay()" class="runButton">Show commands</button>
+                    <button type="submit" onclick="conso.clear()" class="runButton">Clear console</button>
                 </div>
             </div>
         </div>

@@ -1,21 +1,24 @@
 <h1 align="center"> Little Man Computer </h1>
 
 <div align="center">
+  <img src="https://img.shields.io/badge/Version-0.51-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
   <img src="https://img.shields.io/badge/Issues-Unknown-yellow"/>
  </div>
 
-# Objective
+---
+## Objective
 
-* Make it easier to teach
-* Understand how computers work
-* Get the basics of pipelines
+* The Little Man Computer (LMC) provides a simplified model of a computer, making it an easy-to-understand teaching tool for computer science and programming students.
 
+* Through working with the LMC, students gain a deeper understanding of computer architecture and the basics of pipelining, which are fundamental concepts in computer science.
+
+* The hands-on approach to programming with the LMC provides practical experience that can be applied in real-world computer systems design and optimization.
+
+---
 ## How it works
 
-The Little Man Computer (LMC) is a virtual machine used for teaching computer architecture and programming.
-It is a simplified model of a computer that has only a handful of basic instructions and a small amount of memory.
-Users can write assembly language programs and execute them on the LMC simulator to gain a better understanding of how computers work.
+The Little Man Computer (LMC) is a virtual machine that operates on a stored program. It has a limited set of instructions and a small amount of memory that can be used to write assembly language programs. When a program is executed on the LMC, its instructions are fetched from memory and executed one at a time, altering the contents of memory and registers as necessary.
 
 ## What are pipelines? 
 

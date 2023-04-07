@@ -10,17 +10,20 @@ functions.LABEL = function(param) {
 };
 
 functions.BRA = function(label) {
+    conso.log("Jumping to: " + label + "(line " + pos + ")")
     pos = labels[label];
 };
 
 functions.BRP = function(label) {
     if (getAccum() > 0) {
+        conso.log("Jumping to: " + label + "(line " + pos + ")")
         pos = labels[label];
     }
 };
 
 functions.BRZ = function(label) {
     if (getAccum() == 0) {
+        conso.log("Jumping to: " + label + "(line " + pos + ")")
         pos = labels[label];
     }
 };
@@ -35,38 +38,46 @@ functions.DAT = function(param) {
 }
 
 functions.INP = function() {
+    conso.log("Getting input");
     let input = prompt('Input: ');
     setAccum(input)
     document.getElementById("input").value += input + "\n";
 };
 
 functions.OUT = function() {
+    conso.log("Outputing accumulator value");
     document.getElementById("output").value += getAccum() + "\n";
 }
 
 functions.HLT = function() {
+    conso.log("Ending program");
     return true;
 }
 
 functions.ADD = function(value) {
+    conso.log("Adding " + value + " to accumulator");
     value = isVariable(value);
     setAccum(parseInt(getAccum()) + parseInt(value));
 }
 
 functions.SUB = function(value) {
+    conso.log("Subtracting " + value + " from accumulator");
     value = isVariable(value);
     setAccum(parseInt(getAccum()) - parseInt(value));
 }
 
 functions.STA = function(varName) {
+    let value = getAccum();
+    conso.log("Storing at " + varName + " value: " + value)
     if((varName in variables)) { 
-        addToRegister(variables[varName], getAccum());
+        addToRegister(variables[varName], value);
         return
     }
-    addToRegister(parseInt(varName), getAccum());
+    addToRegister(parseInt(varName), value);
 }
 
 functions.LDA = function(varName) {
+    conso.log("Loading from " + varName + " to accumulator");
     let position = variables[varName];
     if (position != null)
         setAccum(getFromRegister(position));
@@ -76,6 +87,15 @@ functions.LDA = function(varName) {
 }
 
 // ------------------------------------------------ //
+const conso = {}
+
+conso.clear = () => document.getElementById("console").value = "";
+conso.log = (text) =>
+{
+    let console = document.getElementById("console");
+    let old = console.value;
+    console.value = text + "\n" + old;
+} 
 
 function isVariable(variable) {
     if (variable in variables) {
@@ -159,7 +179,7 @@ async function run(code)
 
     while(halt == null)
     {
-        await sleep(510 - parseInt(document.getElementById("current-clock-speed").innerHTML));
+        await sleep(2010 - parseInt(document.getElementById("current-clock-speed").innerHTML));
         let func = code[pos][0];
         let param = code[pos][1];
         halt = functions[func](param);

@@ -18,6 +18,50 @@ body
     font-family: 'Courier New', Courier, monospace;
 }
 
+.code
+{
+    resize: none;
+    font-size: large;
+    background-color: transparent;
+    border: solid 1px;
+    border-radius: 5px;
+    color: white;
+    border-color: white;
+    width: 100%;
+    height: 100%;
+}
+
+.accum
+{
+    height: 100%;
+    background-color: transparent;
+    border: solid 1px white;
+    border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+}
+
+.accHead
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 5px 5px 0 0;
+    width: 100%;
+    height: 40%;
+    background-color: var(--secondary);
+}
+
+.accBody
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 60%;
+}
+
 .cardHead
 {
     width: 100%;
@@ -109,22 +153,34 @@ body
     background-color: var(--secondary);
 }
 
-.code
+
+
+.halfHead
 {
-    resize: none;
-    font-size: large;
-    background-color: transparent;
-    border: solid 1px;
-    border-radius: 5px;
-    color: white;
-    border-color: white;
     width: 100%;
-    height: 100%;
+    height: 20%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--secondary);
+    margin: 0;
+}
+
+.halfBody
+{
+    width: 100%;
+    height: 80%;
+    margin: 0;
+}
+
+.halfBody .code
+{
+    border: none;
 }
 
 .halfCard
 {
-    width: 48%;
+    width: 50%;
     height: 100%;
     margin: 0;
 }
@@ -141,18 +197,21 @@ body
 }
 
 .slots{
+    padding: 0;
     width: 100%;
     height: 100%;
 }
 
 .cacheTable
 {
+    padding: 0;
     width: 100%;
     height: 100%;
 }
 
 .slotHeader
 {
+    padding: 0;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     user-select: none;
@@ -174,6 +233,7 @@ body
 
 .slotBody
 {
+    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -183,6 +243,7 @@ body
 
 .clearInput
 {
+    padding: 0;
     border: solid 1px;
     border-radius: 5px;
     border-color: rgb(76, 76, 76);
@@ -229,6 +290,8 @@ body
 
 .cardHalf
 {
+    border: solid 1px white;
+    border-radius: 0 0 5px 5px;
     display: flex;
     width: 100%;
     height: 32.5%;
