@@ -3,8 +3,11 @@
 <div align="center">
   <img src="https://img.shields.io/badge/Version-0.6-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
-  <img src="https://img.shields.io/badge/Issues-Unknown-yellow"/>
-  <img src="https://img.shields.io/badge/Browsers-Chrome-green"/>
+  <img src="https://img.shields.io/badge/Chrome-Suported-green"/>
+  <img src="https://img.shields.io/badge/Safari-Suported-green"/>
+  <img src="https://img.shields.io/badge/Firefox-Not%20Suported-red"/>
+  <img src="https://img.shields.io/badge/Mobile-Not%20Suported-red"/>
+  <img src="https://img.shields.io/badge/Edge-Under%20Development-yellow"/>
  </div>
 
 ---
