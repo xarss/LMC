@@ -1,7 +1,7 @@
 <h1 align="center"> Little Man Computer </h1>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Version-0.52-303060"/>
+  <img src="https://img.shields.io/badge/Version-0.6-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
   <img src="https://img.shields.io/badge/Issues-Unknown-yellow"/>
  </div>
@@ -31,5 +31,3 @@ For example, in a CPU pipeline, the fetch stage retrieves an instruction from me
 Random Access Memory (RAM) is a type of computer memory that can be read from and written to randomly.
 It is volatile, meaning that its contents are lost when power is turned off.
 RAM is used to temporarily store data and instructions that the CPU needs to access quickly.
-
-![image](https://user-images.githubusercontent.com/110632202/230522823-2e17aa1f-816c-456f-a525-77fb92dc8437.png)

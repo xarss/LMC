@@ -22,7 +22,7 @@
         <!--Inactive Color Picker-->
         <!--<span style="font-size: small;"> Color: </span>
         <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">-->
-        <span style="font-size: small; padding-right: 40px;"> Version: 0.52 </span>
+        <span style="font-size: small; padding-right: 40px;"> Version: 0.6 </span>
         <span style="font-size: small;"> by: Chico & Tuza </span>
     </div>
     
@@ -33,7 +33,8 @@
         <div class="terminal"> 
             <div class="cardHead">
                 <span>Terminal</span>
-                <button type="submit" onclick="compile()" class="runButton">Run</button>
+                <button type="submit" onclick="compile()" class="runButton">Compile</button>
+                <button type="submit" onclick="run()" class="runButton">Run</button>
             </div>
             <div class="cardPart">
                 <textarea name="code" id="code" cols="30" rows="10" class="code"></textarea>
@@ -74,9 +75,6 @@
                 <span>Processing Center</span>
                 
             </div>
-            
-            
-
             <div class="cardBody">
 
                 <div class="cardHalf">
@@ -112,7 +110,7 @@
 
                         <!--Values-->
                         <div class="halfRow">
-                            <input type="range" min="10" max="2010" value="50" step="1" id="slider" onchange="changeClockValue()">
+                            <input type="range" min="10" max="2010" value="500" step="1" id="slider" onchange="setClockSpeed()">
                             <span class="centered" id="current-clock-speed"></span>
                         </div>
                         <div class="halfRow">

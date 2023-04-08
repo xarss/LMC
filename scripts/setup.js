@@ -1,3 +1,5 @@
+var clockSpeed = document.getElementById("slider").value;
+
 document.getElementById('code').addEventListener('keydown', function (e) {
     if (e.key == 'Tab') {
         e.preventDefault();
@@ -39,7 +41,9 @@ function slotter(index) {
     const slotHeader = document.createElement('div');
     slotHeader.id = `h_${index}`;
     slotHeader.className = 'slotHeader';
-    slotHeader.textContent = index;
+    let nam = index.toString();
+    nam = nam.length == 1? "0" + nam : nam;
+    slotHeader.textContent = nam;
 
     const slotBody = document.createElement('div');
     slotBody.className = 'slotBody';
@@ -55,6 +59,11 @@ function slotter(index) {
     return slot;
 }
 
+function setClockSpeed()
+{
+    clockSpeed = 2010 - parseInt(document.getElementById("slider").value)
+    document.getElementById("current-clock-speed").innerHTML = clockSpeed;
+}
 
 function generateGrid() {
     const body = document.getElementById('slots');
@@ -67,7 +76,7 @@ function generateGrid() {
         const row = document.createElement('tr');
         row.className = 'cacheRow';
 
-        for (let j = 1; j < 11; j++) {
+        for (let j = 0; j < 10; j++) {
             row.insertAdjacentElement('beforeend', slotter(10 * i + j));
         }
 

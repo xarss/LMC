@@ -1,92 +1,152 @@
 var variables = {};
 var labels    = {};
 const functions = {};
+const generators = {};
 var pos = 0;
+var varsToCreate = [];
+var initVarPos = 0;
 
-// --- Funções que representam as keywords do little man --- //
+// ------- Funções que traduzem keywords para OPCODE ------- //
 
-functions.LABEL = function(param) {
+generators.BRA = function(label) {
+    return "6" + labels[label];
+};
+
+generators.BRP = function(label) {
+    return "8" + labels[label];
+};
+
+generators.BRZ = function(label) {
+    return "7" + labels[label];
+}
+
+generators.INP = function() {
+    return "901";
+};
+
+generators.OUT = function() {
+    return "902";
+}
+
+generators.HLT = function() {
+    return "000";
+}
+
+generators.ADD = function(value) {
+    let pos = variables[value];
+    return "1" + pos;
+}
+
+generators.SUB = function(value) {
+    let pos = variables[value];
+    return "2" + pos;
+}
+
+generators.STA = function(varName) {
+    let pos = variables[varName];
+    return "3" + pos;
+}
+
+generators.LDA = function(varName) {
+    let pos = variables[varName];
+    return "5" + pos;
+}
+
+function LABEL(param) {
     labels[param[1]] = param[0];
 };
 
-functions.BRA = function(label) {
-    conso.log("Jumping to: " + label + "(line " + pos + ")")
-    pos = labels[label];
-};
-
-functions.BRP = function(label) {
-    if (getAccum() > 0) {
-        conso.log("Jumping to: " + label + "(line " + pos + ")")
-        pos = labels[label];
-    }
-};
-
-functions.BRZ = function(label) {
-    if (getAccum() == 0) {
-        conso.log("Jumping to: " + label + "(line " + pos + ")")
-        pos = labels[label];
-    }
-};
-
-functions.DAT = function(param) {
+function DAT(param) {
     position = getRAMSlot();
     if (position != null) {
         newVar(param[0], getRAMSlot());
         addToRegister(position, param[1]);
-        document.getElementById("h_"+position).innerHTML = param[0];
+        //document.getElementById("h_"+position).innerHTML = param[0];
     }
 }
 
-functions.INP = function() {
-    conso.log("Getting input");
-    let input = prompt('Input: ');
-    setAccum(input)
-    document.getElementById("input").value += input + "\n";
+// BRA
+functions["6"] = async function(newPos) {
+    conso.log("Jumping to postion " + newPos)
+    pos = newPos;
 };
 
-functions.OUT = function() {
-    conso.log("Outputing accumulator value");
-    document.getElementById("output").value += getAccum() + "\n";
-}
-
-functions.HLT = function() {
-    conso.log("Ending program");
-    return true;
-}
-
-functions.ADD = function(value) {
-    conso.log("Adding " + value + " to accumulator");
-    value = isVariable(value);
-    setAccum(parseInt(getAccum()) + parseInt(value));
-}
-
-functions.SUB = function(value) {
-    conso.log("Subtracting " + value + " from accumulator");
-    value = isVariable(value);
-    setAccum(parseInt(getAccum()) - parseInt(value));
-}
-
-functions.STA = function(varName) {
-    let value = getAccum();
-    conso.log("Storing at " + varName + " value: " + value)
-    if((varName in variables)) { 
-        addToRegister(variables[varName], value);
+// BRP
+functions["8"] = async function(newPos) {
+    if (getAccum() > 0) {
+        conso.log("Jumping to postion " + newPos)
+        pos = newPos;
         return
     }
-    addToRegister(parseInt(varName), value);
+    pos++;
+};
+
+// BRZ
+functions["7"] = async function(newPos) {
+    if (getAccum() == 0) {
+        conso.log("Jumping to postion " + newPos)
+        pos = newPos;
+        return;
+    }
+    pos++;
+};
+
+// INP & OUT
+functions["9"] = async function(value) {
+    if(value == "01")
+    {
+        conso.log("Getting input");
+        let input = prompt('Input: ');
+        setAccum(input)
+        document.getElementById("input").value += input + "\n";
+    }
+    else
+    {
+        conso.log("Outputing accumulator value");
+        document.getElementById("output").value += getAccum() + "\n";
+    }
+    pos++;
 }
 
-functions.LDA = function(varName) {
-    conso.log("Loading from " + varName + " to accumulator");
-    let position = variables[varName];
-    if (position != null)
-        setAccum(getFromRegister(position));
-    else {
-        setAccum(varName);
-    }
+// HLT
+functions["0"] = async function() {
+    conso.log("Ending program");
+    pos = -1;
+}
+
+// ADD
+functions["1"] = async function(p) {
+    let value = getFromRegister(p);
+    conso.log("Adding " + value + " to accumulator");
+    setAccum(parseInt(getAccum()) + parseInt(value));
+    pos++;
+}
+
+// SUB
+functions["2"] = async function(p) {
+    let value = getFromRegister(p);
+    conso.log("Subtracting " + value + " from accumulator");
+    setAccum(parseInt(getAccum()) - parseInt(value));
+    pos++;
+}
+
+// STA
+functions["3"] = async function(p) {
+    let value = getAccum();
+    conso.log("Storing at " + p + " value: " + value)
+    addToRegister(p, value);
+    pos++;
+}
+
+// LDA
+functions["5"] = async function(p) {
+    conso.log("Loading from " + p + " to accumulator");
+    setAccum(getFromRegister(p));
+    pos++;
 }
 
 // ------------------------------------------------ //
+
 const conso = {}
 
 conso.clear = () => document.getElementById("console").value = "";
@@ -96,13 +156,6 @@ conso.log = (text) =>
     let old = console.value;
     console.value = text + "\n" + old;
 } 
-
-function isVariable(variable) {
-    if (variable in variables) {
-        return document.getElementById("c_" + variables[variable]).value;
-    }
-    return variable;
-}
 
 function addToRegister(index, value = 0)
 {
@@ -139,7 +192,7 @@ function getRAMSlot()
     for (const [key, value] of Object.entries(variables)) {
         used.push(variables[key]);
     }
-    index = 1;
+    index = initVarPos;
     while(used.includes(index))
     {
         index++;
@@ -171,23 +224,33 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-async function run(code)
+async function accumSelect()
 {
-    let size = code.length
-    let halt = null;
-    
+    console.log("A implementar..");
+}
 
-    while(halt == null)
+async function slotSelect(p)
+{
+    let slot = document.getElementById("h_" + p);
+    slot.className = "selected-slotHeader";
+    await sleep(clockSpeed);
+    slot.className = "slotHeader";
+}
+
+function cut(str, index) {
+    return [str.slice(0, index), str.slice(index)];
+}
+
+async function run()
+{   
+    while(pos != -1)
     {
-        await sleep(2010 - parseInt(document.getElementById("current-clock-speed").innerHTML));
-        let func = code[pos][0];
-        let param = code[pos][1];
-        halt = functions[func](param);
-        pos++;
+        await slotSelect(pos);
+        let instruction = getFromRegister(pos);
+        let [func, param] = cut(instruction, 1);
+        console.log("Running: " + func + param);
+        functions[func](param);
     }
-    
-    console.log("Programa finalizou execução");
-    console.log(variables)
 }
 
 function process(line, cl)
@@ -195,7 +258,7 @@ function process(line, cl)
     if(line[0].includes(":"))
     {
         let labelName = line.shift();
-        functions.LABEL([cl - 1, labelName.replace(":", "")])
+        LABEL([cl, labelName.replace(":", "")])
     }
     if(line.length == 1)
     {
@@ -204,9 +267,8 @@ function process(line, cl)
     if(line[1] == "DAT")
     {
         line.splice(1, 1);
-        console.log(line)
-        functions.DAT([...line]);
-        return ["DAT", line[0]];
+        varsToCreate.push(line)
+        return;
     }
     return line
 }
@@ -238,15 +300,16 @@ function compile()
         }
         cleanLine = [];
     });
-    if(errors.length == 0)
+    initVarPos = code.length;
+    varsToCreate.forEach(vari => {
+        DAT(vari);
+    })
+    for(let i = 0; i < code.length; i++)
     {
-        run(code);
-    }
-    else
-    {
-        errors.forEach(err => {
-            console.log(err)
-        })
+        let op = code[i][0];
+        let xx = code[i][1];
+        let opcode = generators[op](xx);
+        addToRegister(i, opcode);
     }
 }
 
@@ -256,10 +319,4 @@ function pasteCodeExample()
     const codeExample = document.getElementById("code-examples").value;
     
     codeArea.value = codes[codeExample];
-}
-
-function changeClockValue()
-{
-    new_value = document.getElementById("slider").value;
-    document.getElementById("current-clock-speed").innerHTML = new_value;
 }
