@@ -4,6 +4,7 @@
   <img src="https://img.shields.io/badge/Version-0.6-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
   <img src="https://img.shields.io/badge/Issues-Unknown-yellow"/>
+  <img src="https://img.shields.io/badge/Browsers-Chrome-green"/>
  </div>
 
 ---
