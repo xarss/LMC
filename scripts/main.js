@@ -1,68 +1,30 @@
 var variables = {};
 var labels    = {};
-const functions = {};
-const generators = {};
-var pos = 0;
+
 var varsToCreate = [];
+
 var initVarPos = 0;
+var pos        = 0;
 
-// ------- Funções que traduzem keywords para OPCODE ------- //
+const functions = {};
+const conso     = {};
+const ram       = {};
+const accum     = {};
+// KEYWORD => OPCODE
+const generators = 
+{
+    HLT: () => { return "000" },
+    INP: () => { return "901" },
+    OUT: () => { return "902" },
 
-generators.BRA = function(label) {
-    return "6" + labels[label];
-};
+    BRA: (label) => { return "6" + labels[label] },
+    BRP: (label) => { return "8" + labels[label] },
+    BRZ: (label) => { return "7" + labels[label] },
 
-generators.BRP = function(label) {
-    return "8" + labels[label];
-};
-
-generators.BRZ = function(label) {
-    return "7" + labels[label];
-}
-
-generators.INP = function() {
-    return "901";
-};
-
-generators.OUT = function() {
-    return "902";
-}
-
-generators.HLT = function() {
-    return "000";
-}
-
-generators.ADD = function(value) {
-    let pos = variables[value];
-    return "1" + pos;
-}
-
-generators.SUB = function(value) {
-    let pos = variables[value];
-    return "2" + pos;
-}
-
-generators.STA = function(varName) {
-    let pos = variables[varName];
-    return "3" + pos;
-}
-
-generators.LDA = function(varName) {
-    let pos = variables[varName];
-    return "5" + pos;
-}
-
-function LABEL(param) {
-    labels[param[1]] = param[0];
-};
-
-function DAT(param) {
-    position = getRAMSlot();
-    if (position != null) {
-        newVar(param[0], getRAMSlot());
-        addToRegister(position, param[1]);
-        //document.getElementById("h_"+position).innerHTML = param[0];
-    }
+    ADD: (value) => { return "1" + variables[value] },
+    SUB: (value) => { return "2" + variables[value] },
+    STA: (value) => { return "3" + variables[value] },
+    LDA: (value) => { return "5" + variables[value] }
 }
 
 // BRA
@@ -73,7 +35,7 @@ functions["6"] = async function(newPos) {
 
 // BRP
 functions["8"] = async function(newPos) {
-    if (getAccum() > 0) {
+    if (accum.get() > 0) {
         conso.log("Jumping to postion " + newPos)
         pos = newPos;
         return
@@ -83,7 +45,7 @@ functions["8"] = async function(newPos) {
 
 // BRZ
 functions["7"] = async function(newPos) {
-    if (getAccum() == 0) {
+    if (accum.get() == 0) {
         conso.log("Jumping to postion " + newPos)
         pos = newPos;
         return;
@@ -97,13 +59,13 @@ functions["9"] = async function(value) {
     {
         conso.log("Getting input");
         let input = prompt('Input: ');
-        setAccum(input)
+        accum.set(input)
         document.getElementById("input").value += input + "\n";
     }
     else
     {
         conso.log("Outputing accumulator value");
-        document.getElementById("output").value += getAccum() + "\n";
+        document.getElementById("output").value += accum.get() + "\n";
     }
     pos++;
 }
@@ -116,38 +78,36 @@ functions["0"] = async function() {
 
 // ADD
 functions["1"] = async function(p) {
-    let value = getFromRegister(p);
+    let value = ram.get(p);
     conso.log("Adding " + value + " to accumulator");
-    setAccum(parseInt(getAccum()) + parseInt(value));
+    accum.set(parseInt(accum.get()) + parseInt(value));
     pos++;
 }
 
 // SUB
 functions["2"] = async function(p) {
-    let value = getFromRegister(p);
+    let value = ram.get(p);
     conso.log("Subtracting " + value + " from accumulator");
-    setAccum(parseInt(getAccum()) - parseInt(value));
+    accum.set(parseInt(accum.get()) - parseInt(value));
     pos++;
 }
 
 // STA
 functions["3"] = async function(p) {
-    let value = getAccum();
+    let value = accum.get();
     conso.log("Storing at " + p + " value: " + value)
-    addToRegister(p, value);
+    ram.add(p, value);
     pos++;
 }
 
 // LDA
 functions["5"] = async function(p) {
     conso.log("Loading from " + p + " to accumulator");
-    setAccum(getFromRegister(p));
+    accum.set(ram.get(p));
     pos++;
 }
 
 // ------------------------------------------------ //
-
-const conso = {}
 
 conso.clear = () => document.getElementById("console").value = "";
 conso.log = (text) =>
@@ -157,39 +117,24 @@ conso.log = (text) =>
     console.value = text + "\n" + old;
 } 
 
-function addToRegister(index, value = 0)
+ram.add = (index, value = 0) =>
 {
     key = "c_" + index.toString();
     document.getElementById(key).value = value;
 }
 
-function getFromRegister(index) {
+ram.get = (index) =>
+{
     if (index in variables) {
         return document.getElementById("c_"+variables[index]);
     }
     return document.getElementById("c_"+index).value;
 }
 
-function getAccum()
-{
-    return document.getElementById("accum").value
-}
-
-function setAccum(value)
-{
-    document.getElementById("accum").value = value;
-}
-
-function sendError()
-{
-    // To implement. Receives a type of error and logs
-    console.log("error!");
-}
-
-function getRAMSlot()
+ram.newSlot = () =>
 {
     let used = [];
-    for (const [key, value] of Object.entries(variables)) {
+    for (const [key, _] of Object.entries(variables)) {
         used.push(variables[key]);
     }
     index = initVarPos;
@@ -205,13 +150,8 @@ function getRAMSlot()
     return index;
 }
 
-function newVar(nam, pos)
+ram.clear = () =>
 {
-    variables[nam] = pos;
-    return pos;
-}
-
-function clearMemory() {
     document.getElementById("input").value = "";
     document.getElementById("output").value = "";
     variables = {};
@@ -220,9 +160,33 @@ function clearMemory() {
     generateGrid();
 }
 
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+accum.get = () =>
+{
+    return document.getElementById("accum").value
 }
+
+accum.set = (value) =>
+{
+    document.getElementById("accum").value = value;
+}
+
+const LABEL = (name, p) => labels[name] = p;
+const DAT   = (name, value) =>
+{
+    let p = ram.newSlot();
+    if (p != null)
+    {
+        variables[name] = p;
+        ram.add(p, value);
+        //document.getElementById("h_"+position).innerHTML = param[0];
+    }
+}
+
+// Waits for passed amount of time
+const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Returns two slices of a string, cut at passed index
+const cut = (str, index) => [str.slice(0, index), str.slice(index)];
 
 async function accumSelect()
 {
@@ -237,18 +201,13 @@ async function slotSelect(p)
     slot.className = "slotHeader";
 }
 
-function cut(str, index) {
-    return [str.slice(0, index), str.slice(index)];
-}
-
 async function run()
 {   
     while(pos != -1)
     {
         await slotSelect(pos);
-        let instruction = getFromRegister(pos);
+        let instruction = ram.get(pos);
         let [func, param] = cut(instruction, 1);
-        console.log("Running: " + func + param);
         functions[func](param);
     }
 }
@@ -257,8 +216,7 @@ function process(line, cl)
 {
     if(line[0].includes(":"))
     {
-        let labelName = line.shift();
-        LABEL([cl, labelName.replace(":", "")])
+        LABEL(line.shift().replace(":", ""), cl);
     }
     if(line.length == 1)
     {
@@ -267,50 +225,31 @@ function process(line, cl)
     if(line[1] == "DAT")
     {
         line.splice(1, 1);
-        varsToCreate.push(line)
+        varsToCreate.push(line);
         return;
     }
     return line
 }
 
-function compile()
+// Was named compile, but load is a better description
+function load()
 {
-    clearMemory();
-    let raw = document.getElementById("code").value;
-    let rawLines = raw.split("\n");
-    rawLines = rawLines.filter(function(value) {
-        return value !== "";
-    });
+    ram.clear();
+    let code = document.getElementById("code").value
+                .split("\n")
+                .filter(value => value.trim() !== "")
+                .map((line, i) => {
+                  let processedLine = process(line.trim().split(/\s/), i);
+                  return processedLine ? processedLine : null;
+                })
+                .filter(line => line !== null);
 
-    let errors = [];
-    let code = [];
-    let cleanLine = [];
-
-    let currentLine = 0;
-    rawLines.forEach(line => {
-        line.replace(/\s+/g, " ").trim().split(" ").forEach(word => {
-            let w = word.trim();
-            w ? cleanLine.push(w) : null;
-        });
-        cleanLine = process(cleanLine, currentLine);
-        currentLine++;
-        if(cleanLine != null)
-        {
-            code.push(cleanLine);
-        }
-        cleanLine = [];
-    });
     initVarPos = code.length;
-    varsToCreate.forEach(vari => {
-        DAT(vari);
-    })
-    for(let i = 0; i < code.length; i++)
+    varsToCreate.forEach(v => DAT(...v));
+    code.forEach(([op, xx], i) => 
     {
-        let op = code[i][0];
-        let xx = code[i][1];
-        let opcode = generators[op](xx);
-        addToRegister(i, opcode);
-    }
+        ram.add(i, generators[op](xx));
+    });
 }
 
 function pasteCodeExample()
