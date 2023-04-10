@@ -13,18 +13,18 @@ const accum     = {};
 // KEYWORD => OPCODE
 const generators = 
 {
-    HLT: () => { return "000" },
-    INP: () => { return "901" },
-    OUT: () => { return "902" },
+    HLT: () => "000",
+    INP: () => "901",
+    OUT: () => "902",
 
-    BRA: (label) => { return "6" + labels[label] },
-    BRP: (label) => { return "8" + labels[label] },
-    BRZ: (label) => { return "7" + labels[label] },
+    BRA: (label) => "6" + labels[label],
+    BRP: (label) => "8" + labels[label],
+    BRZ: (label) => "7" + labels[label],
 
-    ADD: (value) => { return "1" + variables[value] },
-    SUB: (value) => { return "2" + variables[value] },
-    STA: (value) => { return "3" + variables[value] },
-    LDA: (value) => { return "5" + variables[value] }
+    ADD: (value) => "1" + variables[value],
+    SUB: (value) => "2" + variables[value],
+    STA: (value) => "3" + variables[value],
+    LDA: (value) => "5" + variables[value]
 }
 
 // BRA
