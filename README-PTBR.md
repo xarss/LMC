@@ -6,6 +6,8 @@
  </div>
 
 [Documentação em inglês](README.md)
+> **Note**
+> Esta documentação esta incompleta
 
 ---
 ## Objetivo
