@@ -5,10 +5,10 @@
   <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-9cf"/>
  </div>
 
-[English Documentation](README.md)
+[Documentação em inglês](README.md)
 
 ---
-## Objective
+## Objetivo
 
 * O Little Man Computer (LMC) fornece um modelo simplificado de um computador, tornando-se uma ferramenta de ensino fácil de entender para estudantes de ciência da computação e programação.
 
