@@ -1,0 +1,19 @@
+/* Variables */
+:root
+{
+    --main     : #323237;
+    --secondary: #464D7B;
+    --text     : #ffffff;
+}
+
+html
+{
+    color: white;
+}
+
+body
+{
+    margin: 0;
+    background-color: rgb(35, 35, 35);
+    font-family: 'Courier New', Courier, monospace;
+}

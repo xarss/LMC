@@ -5,10 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!--Imports-->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
     <script src="scripts/codes.js" defer></script>
     <script src="scripts/main.js" defer></script>
     <script src="scripts/setup.js" defer></script>
+    <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="style.css">
 
     <title>LMC</title>
@@ -17,13 +19,21 @@
 
     <!--Header-->
     <div class="toolbar">
-        <span> Little Man Computer </span>
+        <span class="title"> Little Man Computer </span>
         <span class="spacer"></span>
-        <!--Inactive Color Picker-->
-        <!--<span style="font-size: small;"> Color: </span>
-        <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">-->
-        <span style="font-size: small; padding-right: 40px;"> Version: 0.62 </span>
-        <span style="font-size: small;"> by: Chico & Tuza </span>
+        <a href="javascript:Overlay()" style="color: var(--text);">
+            <span> Commands </span>
+        </a>
+        <span class="spacer"></span>
+        <a href="https://github.com/xarss/LMC" target="_blank" style="color: var(--text);">
+            <span style="font-size: small; padding-right: 40px;">
+                Documentation
+            </span>
+        </a>
+        <span class="spacer"></span>
+        <span> Version: 0.62 </span>
+        <span class="spacer"></span>
+        <span> by: Chico & Tuza </span>
     </div>
     
     <!--Body-->
@@ -34,38 +44,17 @@
             <div class="cardHead">
                 <span>Terminal</span>
                 <button type="submit" onclick="load()" class="runButton">Load</button>
-                <button type="submit" onclick="run()" class="runButton">Run</button>
+                <button type="submit" onclick="run ()" class="runButton">Run</button>
             </div>
-            <div class="cardPart">
+            <div class="cardFlow">
                 <textarea name="code" id="code" cols="30" rows="10" class="code"></textarea>
             </div>
             <div class="cardHead">
-                <select id="code-examples" name="code_examples">
+                <select id="code-examples" onchange="pasteCodeExample()" name="code_examples">
                     <option value="add2" selected>Add two numbers</option>
                     <option value="sort3">Sort three numbers</option>
                     <option value="countdown">Countdown timer</option>
                 </select>
-            </div>
-            <div class="cardHead">
-                <button type="submit" onclick="pasteCodeExample()" class="runButton">Import code</button>
-            </div>
-        </div>
-
-        <!--Overlay-->
-        <div id="overlay" class="overlay">
-            <div id="overlay-content" class="overlay-content">
-            <div class="toolbar">
-                <h2>Command List</h2>
-                <span class="spacer"></span>
-                <button class="roundButton" onclick="Overlay()">X</button>
-            </div>
-              <table class="info-table">
-                <thead id="info-table-head">
-                  
-                </thead>
-                <tbody id="info-table-body">
-                </tbody>
-              </table>
             </div>
         </div>
 
@@ -159,13 +148,12 @@
                 </div>
                 <div class="cardHead">
                     <span>Console</span>
+                    <button type="submit" onclick="conso.clear()" class="runButton">Clear console</button>
                 </div>
                 <div class="cardHalf">
                     <textarea name="code" id="console" cols="30" rows="10" class="code"></textarea>
                 </div>
                 <div class="cardHead">
-                    <button type="submit" onclick="Overlay()" class="runButton">Show commands</button>
-                    <button type="submit" onclick="conso.clear()" class="runButton">Clear console</button>
                 </div>
             </div>
         </div>
@@ -183,3 +171,34 @@
     </div>
 </body>
 </html>
+
+<!--Extras-->
+
+<!--Overlay-->
+<div id="overlay" class="overlay">
+    <div id="overlay-content" class="overlay-content">
+    <div class="toolbar">
+        <h2>Command List</h2>
+        <span class="spacer"></span>
+        <button class="roundButton" onclick="Overlay()">
+            <span class="material-symbols-outlined">
+                close
+            </span>
+        </button>
+    </div>
+      <table class="info-table">
+        <thead id="info-table-head">
+        </thead>
+        <tbody id="info-table-body">
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!--Inactives-->
+
+<!--Color Picker-->
+<!--
+<span style="font-size: small;"> Color: </span>
+<input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">
+-->
