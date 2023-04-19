@@ -1,4 +1,11 @@
-var clockSpeed = document.getElementById("slider").value;
+var terminal  = document.getElementById("terminal").innerHTML;
+var cache     = document.getElementById("cache").innerHTML;
+var cardState = true;
+
+var clockSpeed   = document.getElementById("slider").value;
+var previousCode = "custom";
+
+var cacheState = false;
 
 document.getElementById('code').addEventListener('keydown', function (e) {
     if (e.key == 'Tab') {
@@ -66,11 +73,8 @@ function setClockSpeed()
 }
 
 function generateGrid() {
-    const body = document.getElementById('slots');
-    body.innerHTML = '';
-
-    const table = document.createElement('table');
-    table.className = 'cacheTable';
+    const table = document.getElementById('slots');
+    table.innerHTML = '';
 
     for (let i = 0; i < 10; i++) {
         const row = document.createElement('tr');
@@ -82,10 +86,18 @@ function generateGrid() {
 
         table.insertAdjacentElement('beforeend', row);
     }
-
-    body.insertAdjacentElement('beforeend', table);
 }
 
+function cacheChanged()
+{
+    cacheState = document.getElementById("using-cache").checked;
+}
+
+function keepCacheState()
+{
+    console.log(cacheState)
+    document.getElementById("using-cache").checked = cacheState;
+}
 
 function changeColor() {
     color = document.getElementById("colorPicker").value
@@ -180,9 +192,52 @@ function generateInfoTable() {
     });
 }
 
+function startWithTerminal()
+{
+    document.getElementById("switch").innerHTML = terminal;
+}
+
+function switchTerminalCache()
+{
+    if(cardState)
+    {
+        cardState = !cardState;
+        terminal = document.getElementById("terminal").innerHTML;
+        document.getElementById("switch").innerHTML = cache;
+        return
+    }
+    cardState = !cardState;
+    cache = document.getElementById("cache").innerHTML;
+    document.getElementById("switch").innerHTML = terminal;
+}
+
+function getPreviousCode()
+{
+    previousCode = document.getElementById("code-examples").value;
+    codes[previousCode] = document.getElementById("code").value;
+}
+
+function setPreviousCode()
+{
+    document.getElementById("code").value = codes[previousCode];
+}
+
+function pasteCodeExample()
+{
+    const codeEditor  = document.getElementById("code");
+    const currentCode = document.getElementById("code-examples").value;
+
+    if(previousCode == "custom")
+    {
+        codes["custom"] = codeEditor.value;
+    }
+    
+    codeEditor.value = codes[currentCode];
+}
+
 //Define initial clock speed
 document.getElementById("current-clock-speed").innerHTML = 200;
 
-
 generateInfoTable();
+startWithTerminal();
 generateGrid();

@@ -1,7 +1,7 @@
 <h1 align="center"> Little Man Computer </h1>
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Version-0.62-303060"/>
+  <img src="https://img.shields.io/badge/Version-0.64-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
  </div>
 

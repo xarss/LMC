@@ -1,9 +1,11 @@
 /* Variables */
 :root
 {
-    --main     : #323237;
-    --secondary: #464D7B;
-    --text     : #ffffff;
+    --main      : #3b3b40;
+    --main-dark : #2f2f33;
+    --main-light: #938e8e;
+    --secondary : #464D7B;
+    --text      : #ffffff;
 }
 
 html
@@ -13,7 +15,18 @@ html
 
 body
 {
+    overflow: hidden;
     margin: 0;
     background-color: rgb(35, 35, 35);
     font-family: 'Courier New', Courier, monospace;
+}
+
+textarea
+{
+    -webkit-user-modify: read-write-plaintext-only;
+}
+
+table
+{
+    border-collapse: collapse;
 }

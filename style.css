@@ -1,14 +1,19 @@
 .code
 {
+    border: none;
     resize: none;
-    font-size: large;
-    background-color: transparent;
-    border: solid 1px;
-    border-radius: 5px;
     color: white;
-    border-color: white;
+    font-size: large;
+    box-sizing: border-box;
+    padding-left: 10px;
+    background-color: var(--main-dark);
     width: 100%;
     height: 100%;
+}
+
+.code:focus
+{
+    outline: none;
 }
 
 .accum
@@ -48,6 +53,11 @@
     height: 60%;
 }
 
+.console
+{
+    height: 30%;
+}
+
 .cardHead
 {
     width: 100%;
@@ -64,8 +74,10 @@
 
 .cardBody
 {
+    display: flex;
+    flex-direction: column;
     width: 100%;
-    height: 93%;
+    height: 92%;
 }
 
 .cardPart
@@ -86,12 +98,13 @@
 
 .lmc
 {
-    height: 92vh;
+    height: 96vh;
+    box-sizing: border-box;
     padding: 2vh;
     display: flex;
 }
 
-.terminal
+.switch
 {
     display: flex;
     flex-direction: column;
@@ -106,7 +119,7 @@
     border: solid 1px;
     border-radius: 10px;
     border-color: white;
-    color: white;
+    color: var(--text);
 }
 
 .runButton:hover
@@ -136,6 +149,7 @@
 {
     margin: 0;
     flex-grow: 1;
+    box-sizing: border-box;
     padding: 0 20px 0 20px;
     height: 4vh;
     display: flex;
@@ -194,13 +208,11 @@
 
 .slot
 {
-    width: calc(100%/10);
+    width : calc(100%/10);
     height: calc(100%/10);
     padding: 0;
     background-color: transparent;
-    border: solid 1px;
-    border-color: white;
-    border-radius: 5px;
+    border: solid 1px var(--main-light);
 }
 
 .slots{
@@ -219,10 +231,8 @@
 .slotHeader, .selected-slotHeader
 {
     padding: 0;
-    border-top-left-radius: 5px;
-    border-top-right-radius: 5px;
     user-select: none;
-    height: 40%;
+    height: 30%;
     width: 100%;
     display: flex;
     font-size: small;
@@ -235,6 +245,12 @@
 {
     color: black;
     background-color: rgb(252, 252, 252);
+}
+
+.cache-table
+{
+    background-color: var(--main-dark);
+    flex-grow: 1;
 }
 
 .color
@@ -250,7 +266,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 60%;
+    height: 70%;
     width: 100%;
 }
 
@@ -259,7 +275,7 @@
     padding: 0;
     border: solid 1px;
     border-radius: 5px;
-    border-color: rgb(76, 76, 76);
+    border-color: var(--main-light);
     text-align: center;
     color: rgb(174, 174, 174);
     width: 60%;
@@ -287,7 +303,7 @@
     width: 25%;
     height: max-content;
     background-color: transparent !important; 
-    color: white;
+    color: var(--text);
     border: solid 1px;
     background-color: white;
     border-radius: 10px;
@@ -303,7 +319,7 @@
 
 .cardHalf
 {
-    border: solid 1px white;
+    border: none;
     display: flex;
     width: 100%;
     height: 28.6%;
@@ -379,7 +395,13 @@
 
 .info-table td
 {
+    box-sizing: border-box;
     padding-left: 15px;
+}
+
+.title
+{
+    font-size: large;
 }
 
 select

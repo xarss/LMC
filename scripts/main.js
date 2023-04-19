@@ -10,6 +10,7 @@ const functions = {};
 const conso     = {};
 const ram       = {};
 const accum     = {};
+
 // KEYWORD => OPCODE
 const generators = 
 {
@@ -195,6 +196,9 @@ async function accumSelect()
 
 async function slotSelect(p)
 {
+    // SET PROGRAM COUNTER
+    document.getElementById("program-counter").value = pos;
+
     let slot = document.getElementById("h_" + p);
     slot.className = "selected-slotHeader";
     await sleep(clockSpeed);
@@ -250,12 +254,4 @@ function load()
     {
         ram.add(i, generators[op](xx));
     });
-}
-
-function pasteCodeExample()
-{
-    const codeArea = document.getElementById("code");
-    const codeExample = document.getElementById("code-examples").value;
-    
-    codeArea.value = codes[codeExample];
 }

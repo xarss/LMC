@@ -7,6 +7,8 @@ codes["add2"] = `\tINP
 \tOUT
 \tHLT\n\nnumber\tDAT`;
 
+codes["custom"] = ""
+
 codes["countdown"] = `\tINP\nloop:\tOUT
 \tSTA\tcount
 \tSUB\tone
