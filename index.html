@@ -40,7 +40,70 @@
     <div class="lmc">
 
         <!--Terminal & Cache-->
-        <div id="switch" class="switch"></div>
+        <div id="switch" class="switch">
+            
+            <!--Terminal-->
+            <div id="terminal" class="switch-active"> 
+                <div class="cardHead">
+                    <button class="runButton" onclick="getPreviousCode(); keepCacheState(); switchTerminalCache();"> Cache </button>
+                    <span>Terminal</span>
+                    <button type="submit" onclick="load()" class="runButton">
+                        Load to RAM
+                    </button>
+                </div>
+
+                <!--Text Editor-->
+                <div class="cardFlow">
+                <textarea   name="code"
+                            id="code"
+                            cols="30"
+                            rows="10"
+                            class="code"
+                            defaultValue=""
+                            spellcheck="false"
+                            placeholder="Code goes here.."></textarea>
+                </div>
+
+                <!--Console-->
+                <div class="cardHead">
+                    <span> Console </span>
+                    <button type="submit" onclick="conso.clear()" class="runButton"> Clear </button>
+                </div>
+                <div class="console">
+                    <textarea   name="code"
+                                id="console"
+                                cols="30"
+                                rows="10"
+                                class="code"
+                                readonly>
+                    </textarea>
+                </div>
+                <div class="cardHead">
+                    <label> Code: </label>
+                    <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
+                        <option value="custom" selected> Custom </option>
+                        <option value="add2">Add two numbers</option>
+                        <option value="sort3">Sort three numbers</option>
+                        <option value="countdown">Countdown timer</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--Cache-->
+            <div id="cache" class="switch-hidden">
+                <div class="cardHead">
+                    <button class="runButton" onclick="switchTerminalCache();"> Terminal </button>
+                    <span>Cache</span>
+                    <input type="checkbox" id="using-cache" onchange="cacheChanged()" />
+                </div>
+
+                <!--Cache Table-->
+                <div class="cache-table"></div>
+
+                <div class="cardHead">
+                </div>
+            </div>
+        </div>
 
         <!--Processing Center-->
         <div class="proc">
@@ -177,66 +240,6 @@
     </div>
 </div>
 
-<!--Terminal-->
-<div id="terminal" class="switch"> 
-    <div class="cardHead">
-        <button class="runButton" onclick="getPreviousCode(); keepCacheState(); switchTerminalCache();"> Cache </button>
-        <span>Terminal</span>
-        <button type="submit" onclick="load()" class="runButton">
-            Load to RAM
-        </button>
-    </div>
-
-    <!--Text Editor-->
-    <div class="cardFlow">
-    <textarea   name="code"
-                id="code"
-                cols="30"
-                rows="10"
-                class="code"
-                placeholder="Code goes here.."
-                spellcheck="false"></textarea>
-    </div>
-
-    <!--Console-->
-    <div class="cardHead">
-        <span> Console </span>
-        <button type="submit" onclick="conso.clear()" class="runButton"> Clear </button>
-    </div>
-    <div class="console">
-        <textarea   name="code"
-                    id="console"
-                    cols="30"
-                    rows="10"
-                    class="code"
-                    readonly>
-        </textarea>
-    </div>
-    <div class="cardHead">
-        <label> Code: </label>
-        <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
-            <option value="custom" selected> Custom </option>
-            <option value="add2">Add two numbers</option>
-            <option value="sort3">Sort three numbers</option>
-            <option value="countdown">Countdown timer</option>
-        </select>
-    </div>
-</div>
-
-<!--Cache-->
-<div id="cache" class="switch">
-    <div class="cardHead">
-        <button class="runButton" onclick="switchTerminalCache(); setPreviousCode(); keepCacheState()"> Terminal </button>
-        <span>Cache</span>
-        <input type="checkbox" id="using-cache" onchange="cacheChanged()" />
-    </div>
-
-    <!--Cache Table-->
-    <div class="cache-table"></div>
-
-    <div class="cardHead">
-    </div>
-</div>
 
 <!--Inactives-->
 

@@ -106,11 +106,24 @@
 
 .switch
 {
-    display: flex;
-    flex-direction: column;
     width: 20%;
     border-radius: 10px;
     background-color: var(--main);
+}
+
+.switch-active
+{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    background-color: var(--main);
+}
+
+.switch-hidden
+{
+    display: none;
 }
 
 .runButton

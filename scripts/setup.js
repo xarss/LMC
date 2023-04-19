@@ -1,35 +1,9 @@
-var terminal  = document.getElementById("terminal").innerHTML;
-var cache     = document.getElementById("cache").innerHTML;
 var cardState = true;
 
 var clockSpeed   = document.getElementById("slider").value;
 var previousCode = "custom";
 
 var cacheState = false;
-
-document.getElementById('code').addEventListener('keydown', function (e) {
-    if (e.key == 'Tab') {
-        e.preventDefault();
-        var start = this.selectionStart;
-        var end = this.selectionEnd;
-
-        // set textarea value to: text before caret + tab + text after caret
-        this.value = this.value.substring(0, start) +
-            "\t" + this.value.substring(end);
-
-        // put caret at right position again
-        this.selectionStart =
-            this.selectionEnd = start + 1;
-    }
-    if (e.key == " ") {
-        e.preventDefault();
-        let textarea = document.activeElement;
-        let cursorPos = textarea.selectionStart;
-        let text = textarea.value;
-        textarea.value = text.substring(0, cursorPos) + "\t" + text.substring(cursorPos);
-        textarea.setSelectionRange(cursorPos + 1, cursorPos + 1);
-    }
-});
 
 function Overlay() {
     const current = document.getElementById("overlay");
@@ -194,32 +168,28 @@ function generateInfoTable() {
 
 function startWithTerminal()
 {
-    document.getElementById("switch").innerHTML = terminal;
+    document.getElementById("switch").innerHTML = terminal.innerHTML;
 }
 
 function switchTerminalCache()
 {
-    if(cardState)
+    let terminal  = document.getElementById("terminal");
+    let cache     = document.getElementById("cache");
+
+    if(terminal.className === "switch-active")
     {
-        cardState = !cardState;
-        terminal = document.getElementById("terminal").innerHTML;
-        document.getElementById("switch").innerHTML = cache;
+        terminal.className = "switch-hidden";
+        cache.className    = "switch-active";
         return
     }
-    cardState = !cardState;
-    cache = document.getElementById("cache").innerHTML;
-    document.getElementById("switch").innerHTML = terminal;
+    terminal.className = "switch-active";
+    cache.className    = "switch-hidden";
 }
 
 function getPreviousCode()
 {
     previousCode = document.getElementById("code-examples").value;
     codes[previousCode] = document.getElementById("code").value;
-}
-
-function setPreviousCode()
-{
-    document.getElementById("code").value = codes[previousCode];
 }
 
 function pasteCodeExample()
@@ -235,9 +205,38 @@ function pasteCodeExample()
     codeEditor.value = codes[currentCode];
 }
 
+/*
+document.getElementById('code').addEventListener('keydown', (e) => {
+    if (e.key == 'Tab') {
+        e.preventDefault();
+        var start = this.selectionStart;
+        var end   = this.selectionEnd;
+
+        // set textarea value to: text before caret + tab + text after caret
+        this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
+
+        // put caret at right position again
+        this.selectionStart = this.selectionEnd = start + 1;
+    }
+});
+*/
+
+const codeElement = document.getElementById('code');
+
+codeElement.addEventListener('keydown', function(e) {
+  if (e.key === 'Tab' || e.key === ' ') {
+    e.preventDefault();
+    const startPos = this.selectionStart;
+    const endPos = this.selectionEnd;
+    const value = this.value;
+    this.value = value.substring(0, startPos) + '\t' + value.substring(endPos);
+    this.selectionStart = this.selectionEnd = startPos + 1;
+  }
+});
+
+
 //Define initial clock speed
 document.getElementById("current-clock-speed").innerHTML = 200;
 
 generateInfoTable();
-startWithTerminal();
 generateGrid();
