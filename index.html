@@ -31,7 +31,7 @@
             </span>
         </a>
         <span class="spacer"></span>
-        <span> Version: 0.64 </span>
+        <span> Version: 0.65 </span>
         <span class="spacer"></span>
         <span> by: Chico & Tuza </span>
     </div>
@@ -39,76 +39,10 @@
     <!--Body-->
     <div class="lmc">
 
-        <!--Terminal & Cache-->
-        <div id="switch" class="switch">
-            
-            <!--Terminal-->
-            <div id="terminal" class="switch-active"> 
-                <div class="cardHead">
-                    <button class="runButton" onclick="getPreviousCode(); keepCacheState(); switchTerminalCache();"> Cache </button>
-                    <span>Terminal</span>
-                    <button type="submit" onclick="load()" class="runButton">
-                        Load to RAM
-                    </button>
-                </div>
-
-                <!--Text Editor-->
-                <div class="cardFlow">
-                <textarea   name="code"
-                            id="code"
-                            cols="30"
-                            rows="10"
-                            class="code"
-                            defaultValue=""
-                            spellcheck="false"
-                            placeholder="Code goes here.."></textarea>
-                </div>
-
-                <!--Console-->
-                <div class="cardHead">
-                    <span> Console </span>
-                    <button type="submit" onclick="conso.clear()" class="runButton"> Clear </button>
-                </div>
-                <div class="console">
-                    <textarea   name="code"
-                                id="console"
-                                cols="30"
-                                rows="10"
-                                class="code"
-                                readonly>
-                    </textarea>
-                </div>
-                <div class="cardHead">
-                    <label> Code: </label>
-                    <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
-                        <option value="custom" selected> Custom </option>
-                        <option value="add2">Add two numbers</option>
-                        <option value="sort3">Sort three numbers</option>
-                        <option value="countdown">Countdown timer</option>
-                    </select>
-                </div>
-            </div>
-
-            <!--Cache-->
-            <div id="cache" class="switch-hidden">
-                <div class="cardHead">
-                    <button class="runButton" onclick="switchTerminalCache();"> Terminal </button>
-                    <span>Cache</span>
-                    <input type="checkbox" id="using-cache" onchange="cacheChanged()" />
-                </div>
-
-                <!--Cache Table-->
-                <div class="cache-table"></div>
-
-                <div class="cardHead">
-                </div>
-            </div>
-        </div>
-
         <!--Processing Center-->
-        <div class="proc">
+        <div class="cpu">
             <div class="cardHead">
-                <span>Processing Center</span>
+                <span>Central Processing Unit</span>
                 
             </div>
             <div class="cardBody">
@@ -201,16 +135,96 @@
             </div>
         </div>
 
+        <!--Terminal & Cache-->
+        <div id="switch" class="switch">
+            
+            <!--Terminal-->
+            <div id="terminal" class="switch-active"> 
+                <div class="darkCardHead">
+                    <button class="other-tab" onclick="switchTerminalCache()">
+                        Cache
+                    </button>
+                    <button class="active-tab">
+                        Terminal
+                    </button>
+                </div>
+                <div class="cardHead"></div>
+
+                <!--Text Editor-->
+                <div class="cardFlow">
+                <textarea   name="code"
+                            id="code"
+                            cols="30"
+                            rows="10"
+                            class="code"
+                            defaultValue=""
+                            spellcheck="false"
+                            placeholder="Code goes here.."></textarea>
+                </div>
+
+                <!--Console-->
+                <div class="cardHead">
+                    <span> Console </span>
+                    <button type="submit" onclick="conso.clear()" class="runButton"> Clear </button>
+                </div>
+                <div class="console">
+                    <textarea   name="code"
+                                id="console"
+                                cols="30"
+                                rows="10"
+                                class="code"
+                                readonly>
+                    </textarea>
+                </div>
+                <div class="cardHead">
+                    <label> Code: </label>
+                    <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
+                        <option value="custom" selected> Custom </option>
+                        <option value="add2">Add two numbers</option>
+                        <option value="sort3">Sort three numbers</option>
+                        <option value="countdown">Countdown timer</option>
+                    </select>
+                </div>
+            </div>
+
+            <!--Cache-->
+            <div id="cache" class="switch-hidden">
+                <div class="darkCardHead">
+                    <button class="active-tab">
+                        Cache
+                    </button>
+                    <button class="other-tab" onclick="switchTerminalCache();">
+                        Terminal
+                    </button>
+                </div>
+                <div class="cardHead"></div>
+
+                <!--Cache Table-->
+                <div class="cache-table"></div>
+
+                <div class="cardHead">
+                </div>
+            </div>
+        </div>
+
         <!--RAM-->
         <div class="randomAcessMemory">
             <div class="cardHead">
                 <span>Random Access Memory</span>
             </div>
             <div class="cardBody">
+
+                <!--RAM Table-->
                 <table id="slots" class="cacheTable"></table>
+
             </div>
             <div class="cardHead">
-                <button type="submit" onclick="run ()" class="runButton"> Run Code </button>
+                <button type="submit" onclick="load()" class="runButton">
+                    Load current code to RAM
+                </button>
+                <button type="submit" onclick="run ()" class="runButton">
+                    Run Code
+                </button>
             </div>
         </div>
     </div>

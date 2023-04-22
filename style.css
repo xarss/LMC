@@ -58,14 +58,19 @@
     height: 30%;
 }
 
-.cardHead
+.cardHead, .darkCardHead
 {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
     height: 4%;
-}   
+}
+
+.darkCardHead
+{
+    background-color: var(--main-dark);
+}
 
 .cardHead * + *
 {
@@ -74,6 +79,7 @@
 
 .cardBody
 {
+    background-color: var(--main-dark);
     display: flex;
     flex-direction: column;
     width: 100%;
@@ -106,7 +112,8 @@
 
 .switch
 {
-    width: 20%;
+    margin-left: 20px;
+    width: 25%;
     border-radius: 10px;
     background-color: var(--main);
 }
@@ -128,10 +135,10 @@
 
 .runButton
 {
-    background-color: var(--secondary);
+    background-color: var(--main-dark);
     border: solid 1px;
-    border-radius: 10px;
-    border-color: white;
+    border-radius: 5px;
+    border-color: var(--main-light);
     color: var(--text);
 }
 
@@ -140,11 +147,10 @@
     cursor: pointer;
 }
 
-.proc
+.cpu
 {
     display: flex;
     flex-direction: column;
-    margin-left: 20px;
     width: calc(25% + 40px);
     border-radius: 10px;
     background-color: var(--main);
@@ -153,7 +159,7 @@
 .randomAcessMemory
 {
     margin-left: 20px;
-    width: calc(55% - 80px);
+    width: calc(50% - 80px);
     border-radius: 10px;
     background-color: var(--main);
 }
@@ -179,11 +185,11 @@
 .halfHead
 {
     width: 100%;
-    height: 20%;
+    height: 10%;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: var(--secondary);
+    background-color: var(--main);
     margin: 0;
 }
 
@@ -225,7 +231,7 @@
     height: calc(100%/10);
     padding: 0;
     background-color: transparent;
-    border: solid 1px var(--main-light);
+    border: none;
 }
 
 .slots{
@@ -234,8 +240,11 @@
     height: 100%;
 }
 
+
+
 .cacheTable
 {
+    background-color: var(--main-dark);
     padding: 0;
     width: 100%;
     height: 100%;
@@ -251,7 +260,7 @@
     font-size: small;
     justify-content: center;
     align-items: center;
-    background-color: var(--secondary);
+    background-color: var(--main);
 }
 
 .selected-slotHeader
@@ -332,10 +341,11 @@
 
 .cardHalf
 {
+    padding: 0;
     border: none;
     display: flex;
     width: 100%;
-    height: 28.6%;
+    height: 40%;
 }
 
 .roundButton
@@ -412,6 +422,28 @@
     padding-left: 15px;
 }
 
+.active-tab, .other-tab
+{
+    font-family: 'Courier New', Courier, monospace;
+    margin: 0;
+    flex-grow: 1;
+    height: 100%;
+    color: var(--text);
+    background-color: var(--main);
+    border-radius: 10px 10px 0 0;
+    border: none;
+}
+
+.other-tab
+{
+    background-color: var(--main-dark);
+}
+
+.active-tab:hover, .other-tab:hover
+{
+    cursor: pointer;
+}
+
 .title
 {
     font-size: large;
@@ -421,7 +453,7 @@ select
 {
     background-color: var(--main);
     color: white;
-    border: solid 1px white;
+    border: solid 1px var(--main-light);
     border-radius: 5px;
 }
 

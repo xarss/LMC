@@ -62,17 +62,6 @@ function generateGrid() {
     }
 }
 
-function cacheChanged()
-{
-    cacheState = document.getElementById("using-cache").checked;
-}
-
-function keepCacheState()
-{
-    console.log(cacheState)
-    document.getElementById("using-cache").checked = cacheState;
-}
-
 function changeColor() {
     color = document.getElementById("colorPicker").value
     var css = document.querySelector(':root');
@@ -80,8 +69,6 @@ function changeColor() {
 }
 
 function generateInfoTable() {
-    let table = document.getElementById("info-table");
-    let contentHead = ["Command name", "Syntax", "Description", "Opcode"]
     let contentBody = [
         {
             "command_name": "Input",
@@ -182,6 +169,7 @@ function switchTerminalCache()
         cache.className    = "switch-active";
         return
     }
+    
     terminal.className = "switch-active";
     cache.className    = "switch-hidden";
 }
@@ -205,25 +193,7 @@ function pasteCodeExample()
     codeEditor.value = codes[currentCode];
 }
 
-/*
-document.getElementById('code').addEventListener('keydown', (e) => {
-    if (e.key == 'Tab') {
-        e.preventDefault();
-        var start = this.selectionStart;
-        var end   = this.selectionEnd;
-
-        // set textarea value to: text before caret + tab + text after caret
-        this.value = this.value.substring(0, start) + "\t" + this.value.substring(end);
-
-        // put caret at right position again
-        this.selectionStart = this.selectionEnd = start + 1;
-    }
-});
-*/
-
-const codeElement = document.getElementById('code');
-
-codeElement.addEventListener('keydown', function(e) {
+document.getElementById('code').addEventListener('keydown', function(e) {
   if (e.key === 'Tab' || e.key === ' ') {
     e.preventDefault();
     const startPos = this.selectionStart;

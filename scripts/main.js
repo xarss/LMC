@@ -22,10 +22,10 @@ const generators =
     BRP: (label) => "8" + labels[label],
     BRZ: (label) => "7" + labels[label],
 
-    ADD: (value) => "1" + (value in variables ? variables[value] : value) ,
-    SUB: (value) => "2" + variables[value],
-    STA: (value) => "3" + variables[value],
-    LDA: (value) => "5" + variables[value]
+    ADD: (value) => "1" + (value in variables ? variables[value] : value),
+    SUB: (value) => "2" + (value in variables ? variables[value] : value),
+    STA: (value) => "3" + (value in variables ? variables[value] : value),
+    LDA: (value) => "5" + (value in variables ? variables[value] : value)
 }
 
 // BRA
