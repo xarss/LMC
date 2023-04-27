@@ -11,6 +11,14 @@ const conso     = {};
 const ram       = {};
 const accum     = {};
 
+// Machine Cycle 
+
+var fetchedData = []
+var decodedData = []
+var canFetch   = true;
+var executePos = null;
+
+
 // KEYWORD => OPCODE
 const generators = 
 {
@@ -32,6 +40,7 @@ const generators =
 functions["6"] = async function(newPos) {
     conso.log("Jumping to postion " + newPos)
     pos = newPos;
+    canFetch = true;
 };
 
 // BRP
@@ -39,9 +48,12 @@ functions["8"] = async function(newPos) {
     if (accum.get() > 0) {
         conso.log("Jumping to postion " + newPos)
         pos = newPos;
-        return
+        canFetch = true;
+        return;
     }
+    conso.log("Ignoring BRP");
     pos++;
+    canFetch = true;
 };
 
 // BRZ
@@ -49,9 +61,12 @@ functions["7"] = async function(newPos) {
     if (accum.get() == 0) {
         conso.log("Jumping to postion " + newPos)
         pos = newPos;
+        canFetch = true;
         return;
     }
+    conso.log("Ignoring BRZ");
     pos++;
+    canFetch = true;
 };
 
 // INP & OUT
@@ -68,7 +83,7 @@ functions["9"] = async function(value) {
         conso.log("Outputing accumulator value");
         document.getElementById("output").value += accum.get() + "\n";
     }
-    pos++;
+    //pos++;
 }
 
 // HLT
@@ -82,7 +97,7 @@ functions["1"] = async function(p) {
     let value = ram.get(p);
     conso.log("Adding " + value + " to accumulator");
     accum.set(parseInt(accum.get()) + parseInt(value));
-    pos++;
+    //pos++;
 }
 
 // SUB
@@ -90,7 +105,7 @@ functions["2"] = async function(p) {
     let value = ram.get(p);
     conso.log("Subtracting " + value + " from accumulator");
     accum.set(parseInt(accum.get()) - parseInt(value));
-    pos++;
+    //pos++;
 }
 
 // STA
@@ -98,17 +113,92 @@ functions["3"] = async function(p) {
     let value = accum.get();
     conso.log("Storing at " + p + " value: " + value)
     ram.add(p, value);
-    pos++;
+    //pos++;
 }
 
 // LDA
 functions["5"] = async function(p) {
     conso.log("Loading from " + p + " to accumulator");
     accum.set(ram.get(p));
-    pos++;
+    //pos++;
 }
 
 // ------------------------------------------------ //
+
+function tuc(str, index) 
+{ 
+    const indiceInvertido = str.length - index;
+    const primeiraParte = str.slice(0, indiceInvertido);
+    const segundaParte = str.slice(indiceInvertido);
+  
+    return [primeiraParte, segundaParte];
+}
+
+function lowCounter(lista) 
+{  
+    let indiceMenor = 0;
+    let menorValor = lista[0].counter;
+
+    for (let i = 1; i < lista.length; i++) {
+        if (lista[i].counter < menorValor) {
+        menorValor = lista[i].counter;
+        indiceMenor = i;
+        }
+    }
+
+    return indiceMenor;
+}
+
+class Cache {
+    constructor(num_linhas)
+    {
+        this.num_linhas = num_linhas;
+        this.cache = [];
+    }
+
+    initCache()
+    {
+        for(let i = 0; i < this.num_linhas; i++)
+        {
+            this.cache.push({"validade": 0, "tag": null, "dado": null});
+        }
+    }
+
+    accessCache(address)
+    {
+        let [tag, dado] = tuc(address, this.num_linhas/2);
+        for(let i = 0; i < this.cache.length; i++)
+        {
+            if (this.cache[i]["validade"] == 1 && this.cache[i]['tag'] == tag && this.cache[i]['dado'] == dado)
+            {
+                conso.log("CACHE HIT at ADDRESS: " + tag + dado);
+                return 'hit';
+            }
+        }
+        conso.log("CACHE MISS at ADDRESS: " + tag + dado);
+        this.storeCache(address);
+        return 'miss';
+    }
+
+    storeCache(address)
+    {
+        let mypos = parseInt(address, 2);
+        for(let i = 0; i < this.num_linhas; i++)
+        {
+            let cAddress = (mypos + i).toString(2).padStart(7, "0");
+            // console.log("pos: " + (mypos+i) + " address: " + cAddress);
+            let [tag, dado] = tuc(cAddress, this.num_linhas/2);
+            
+            this.cache[i].validade = 1;
+            this.cache[i].tag = tag;
+            this.cache[i].dado = dado;
+        }
+    }
+}
+
+
+
+
 
 conso.clear = () => document.getElementById("console").value = "";
 conso.log = (text) =>
@@ -120,7 +210,7 @@ conso.log = (text) =>
 
 ram.add = (index, value = 0) =>
 {
-    key = "c_" + index.toString();
+    key = "c_" + index;
     document.getElementById(key).value = value;
 }
 
@@ -158,6 +248,10 @@ ram.clear = () =>
     variables = {};
     labels = {};
     pos = 0;
+    fetchedData = []
+    decodedData = []
+    canFetch   = true;
+    executePos = null;
     generateGrid();
 }
 
@@ -194,26 +288,91 @@ async function accumSelect()
     console.log("A implementar..");
 }
 
-async function slotSelect(p)
+async function slotSelect(p, color)
 {
     // SET PROGRAM COUNTER
     document.getElementById("program-counter").value = pos;
 
     let slot = document.getElementById("h_" + p);
-    slot.className = "selected-slotHeader";
+    slot.style.backgroundColor = color;
+    //slot.className = "selected-slotHeader";
     await sleep(clockSpeed);
-    slot.className = "slotHeader";
+    slot.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main'); 
+   // slot.className = "slotHeader";
+}
+
+async function fetch()
+{
+    if (canFetch)
+    {
+        pos = parseInt(pos);
+        await slotSelect(pos, "7b7246"); //Amarelo
+        //await sleep(clockSpeed);
+        let fetchedAddress = pos.toString(2).padStart(7, "0"); // Pega o id do slot e transforma em binário de 7 bits
+        fetchedData.push(fetchedAddress); // Guarda na lista de fetch
+        conso.log("Fetched: "+ fetchedAddress)
+        canFetch = false;
+    }
+}
+
+async function decode()
+{
+    // 6 - 7 - 8 -> BRs
+    if (fetchedData[0] !== null && fetchedData[0] !== undefined)
+    {
+        let codedAddress = fetchedData.splice(0, 1); // Pega a instrução na ram em formato binário.
+        executePos = parseInt(codedAddress[0], 2)
+        let decodedAddress = ram.get(executePos); // Traduz para instrução em decimal.
+        conso.log("decoded: "+ decodedAddress);
+        let firstDigit = parseInt(decodedAddress.toString().charAt(0))
+        if (![6, 7, 8, 0].includes(firstDigit)) // Se for branch ou halt
+        {
+            pos++;
+            canFetch = true;
+        }
+        await slotSelect(executePos, "464d7b"); //Azul
+        //await sleep(clockSpeed);
+        decodedData.push(decodedAddress); // Guarda a instrução na lista de instruções
+    }
+}
+
+async function execute()
+{
+    if (decodedData[0] !== null && decodedData[0] !== undefined)
+    {
+        let rawInstruction = decodedData.splice(0, 1);
+        let [func, param] = cut(rawInstruction[0], 1);
+        if ([6,7,8].includes(func))
+        {
+            functions[func](param);
+            await slotSelect(executePos, "467b49"); //Verde
+            return;
+        }
+        functions[func](param);
+        await slotSelect(executePos, "467b49"); //Verde
+    }
 }
 
 async function run()
 {   
+    c1 = new Cache(4);
+    let usingPipeline = true;
+    const inicio = performance.now();
     while(pos != -1)
     {
-        await slotSelect(pos);
-        let instruction = ram.get(pos);
-        let [func, param] = cut(instruction, 1);
-        functions[func](param);
+        if (!usingPipeline) 
+        {
+            await fetch()
+            await decode()
+            await execute()
+        }
+        else
+        {
+            await Promise.all([execute(), decode(), fetch()]);
+        }
     }
+    const fim = performance.now();
+    conso.log(`Execution time: ${(fim - inicio)/1000} seconds`);
 }
 
 function process(line, cl)

@@ -1,6 +1,7 @@
 var cardState = true;
 
-var clockSpeed   = document.getElementById("slider").value;
+// var clockSpeed   = document.getElementById("slider").value;
+var clockSpeed = 1000;
 var previousCode = "custom";
 
 var cacheState = false;
@@ -14,6 +15,7 @@ function Overlay() {
         current.style.display = "block";
     }
 }
+
 
 function slotter(index) {
     const slot = document.createElement('td');
@@ -42,8 +44,9 @@ function slotter(index) {
 
 function setClockSpeed()
 {
-    clockSpeed = 2010 - parseInt(document.getElementById("slider").value)
-    document.getElementById("current-clock-speed").innerHTML = clockSpeed;
+    document.getElementById('clockInput').value = document.getElementById('slider').value;
+    clockSpeed = 500 - document.getElementById("clockInput").value;
+    document.getElementById("current-clock-speed").innerHTML = ((document.getElementById('clockInput').value/1000)*3).toFixed(1) + " IPS";
 }
 
 function generateGrid() {
@@ -206,7 +209,7 @@ document.getElementById('code').addEventListener('keydown', function(e) {
 
 
 //Define initial clock speed
-document.getElementById("current-clock-speed").innerHTML = 200;
+//document.getElementById("current-clock-speed").innerHTML = ((300/1000)*3).toFixed(1) + " IPS";
 
 generateInfoTable();
 generateGrid();
