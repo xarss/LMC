@@ -1,4 +1,5 @@
 var cardState = true;
+const cacheSize = 4;
 
 // var clockSpeed   = document.getElementById("slider").value;
 var clockSpeed = 1000;
@@ -183,6 +184,64 @@ function getPreviousCode()
     codes[previousCode] = document.getElementById("code").value;
 }
 
+function newCacheLine(index)
+{
+    const tr   = document.createElement("tr");
+    tr.id = "r_" + index;
+
+    const val  = document.createElement("td");
+    const tag  = document.createElement("td");
+    const data = document.createElement("td");
+
+    const val_content  = document.createElement("div");
+    const tag_content  = document.createElement("div");
+    const data_content = document.createElement("div");
+
+    const val_input  = document.createElement("input");
+    const tag_input  = document.createElement("input");
+    const data_input = document.createElement("input");
+
+    val_input.value  = "000";
+    tag_input.value  = "000";
+    data_input.value = "000"
+
+    val_content.className  = "flex-center";
+    tag_content.className  = "flex-center";
+    data_content.className = "flex-center";
+
+    val_input.className  = "clearInput";
+    tag_input.className  = "clearInput";
+    data_input.className = "clearInput";
+    
+    val_input.id  = "v_" + index;
+    tag_input.id  = "t_" + index;
+    data_input.id = "d_" + index;
+
+    val_content.appendChild ( val_input  );
+    tag_content.appendChild ( tag_input  );
+    data_content.appendChild( data_input );
+
+    val.appendChild ( val_content  );
+    tag.appendChild ( tag_content  );
+    data.appendChild( data_content );
+    
+    tr.appendChild( val  );
+    tr.appendChild( tag  );
+    tr.appendChild( data );
+    
+    return tr;
+}
+
+function generateCache()
+{
+    let body = document.getElementById("cache-body");
+
+    for(let i = 0; i < cacheSize; i++)
+    {
+        body.appendChild( newCacheLine(i) );
+    }
+}
+
 function pasteCodeExample()
 {
     const codeEditor  = document.getElementById("code");
@@ -211,5 +270,6 @@ document.getElementById('code').addEventListener('keydown', function(e) {
 //Define initial clock speed
 //document.getElementById("current-clock-speed").innerHTML = ((300/1000)*3).toFixed(1) + " IPS";
 
+generateCache();
 generateInfoTable();
 generateGrid();

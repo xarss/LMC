@@ -13,10 +13,13 @@ const accum     = {};
 
 // Machine Cycle 
 
+var myCache = null;
 var fetchedData = []
 var decodedData = []
-var canFetch   = true;
-var executePos = null;
+var canFetch    = true;
+var executePos  = null;
+var usingPipeline = false;
+var usingCache  = false;
 
 
 // KEYWORD => OPCODE
@@ -149,7 +152,7 @@ function lowCounter(lista)
     return indiceMenor;
 }
 
-class Cache {
+class CacheMemory {
     constructor(num_linhas)
     {
         this.num_linhas = num_linhas;
@@ -160,7 +163,29 @@ class Cache {
     {
         for(let i = 0; i < this.num_linhas; i++)
         {
-            this.cache.push({"validade": 0, "tag": null, "dado": null});
+            this.cache.push({"validade": 0, "tag": 'null', "dado": 'null'});
+        }
+        this.updateCacheVisual();
+    }
+
+    async updateCacheVisual()
+    {
+        for(let i = 0; i < this.num_linhas; i++)
+        {
+            let tRow = document.getElementById('r_' + i);
+            let tTag = document.getElementById('t_' + i);
+            let tValid = document.getElementById('v_' + i);
+            let tData = document.getElementById('d_' + i);
+            tTag.value = this.cache[i].tag;
+            tValid.value = this.cache[i].validade;
+            tData.value = this.cache[i].dado; 
+            let newPos = parseInt((this.cache[i].tag + this.cache[i].dado), 2);
+            let slot = document.getElementById('h_' + newPos);
+            slot.style.backgroundColor = "#7b4657";
+            tRow.style.backgroundColor = "#7b4657";
+            await sleep(50);
+            tRow.style.backgroundColor = "transparent";
+            slot.style.backgroundColor = "transparent";
         }
     }
 
@@ -171,11 +196,11 @@ class Cache {
         {
             if (this.cache[i]["validade"] == 1 && this.cache[i]['tag'] == tag && this.cache[i]['dado'] == dado)
             {
-                conso.log("CACHE HIT at ADDRESS: " + tag + dado);
+                CacheMemory.log("CACHE HIT at ADDRESS: " + tag + dado);
                 return 'hit';
             }
         }
-        conso.log("CACHE MISS at ADDRESS: " + tag + dado);
+        CacheMemory.log("CACHE MISS at ADDRESS: " + tag + dado);
         this.storeCache(address);
         return 'miss';
     }
@@ -189,14 +214,20 @@ class Cache {
             // console.log("pos: " + (mypos+i) + " address: " + cAddress);
             let [tag, dado] = tuc(cAddress, this.num_linhas/2);
             
-            this.cache[i].validade = 1;
-            this.cache[i].tag = tag;
-            this.cache[i].dado = dado;
+            this.cache[i]['validade'] = 1;
+            this.cache[i]['tag'] = tag;
+            this.cache[i]['dado'] = dado;
+            console.log(`Dado ${dado} i: ${i}`);
         }
+        this.updateCacheVisual();
+    }
+    static log(text)
+    {
+        let console = document.getElementById("cache-console");
+        let old = console.value;
+        console.value = text + "\n" + old;
     }
 }
-
-
 
 
 
@@ -288,17 +319,25 @@ async function accumSelect()
     console.log("A implementar..");
 }
 
-async function slotSelect(p, color)
+async function slotSelect(p, color, cacheOn = false)
 {
     // SET PROGRAM COUNTER
     document.getElementById("program-counter").value = pos;
 
     let slot = document.getElementById("h_" + p);
-    slot.style.backgroundColor = color;
-    //slot.className = "selected-slotHeader";
-    await sleep(clockSpeed);
-    slot.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main'); 
-   // slot.className = "slotHeader";
+    if(cacheOn)
+    {
+        let tRow = document.getElementById("r_" + pos % 4);
+        tRow.style.backgroundColor = color;
+        await sleep(50);
+        tRow.style.backgroundColor = "transparent";
+    }
+    else
+    {
+        slot.style.backgroundColor = color;
+        await sleep(clockSpeed);
+        slot.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue('--main'); 
+    }
 }
 
 async function fetch()
@@ -306,7 +345,21 @@ async function fetch()
     if (canFetch)
     {
         pos = parseInt(pos);
-        await slotSelect(pos, "7b7246"); //Amarelo
+        if(usingCache && myCache !== null)
+        {
+            if(myCache.accessCache(pos.toString(2).padStart(7, "0")) == 'hit')
+            {
+                await slotSelect(pos, "7b7246", true);
+            }
+            else
+            {
+                await slotSelect(pos, "7b7246"); //Amarelo
+            }
+        }
+        else
+        {
+            await slotSelect(pos, "7b7246");
+        }
         //await sleep(clockSpeed);
         let fetchedAddress = pos.toString(2).padStart(7, "0"); // Pega o id do slot e transforma em binário de 7 bits
         fetchedData.push(fetchedAddress); // Guarda na lista de fetch
@@ -355,8 +408,10 @@ async function execute()
 
 async function run()
 {   
-    c1 = new Cache(4);
-    let usingPipeline = true;
+    myCache = new CacheMemory(4);
+    myCache.initCache();
+    usingPipeline = document.getElementById('using-pipeline').checked;
+    usingCache = document.getElementById('using-cache').checked;
     const inicio = performance.now();
     while(pos != -1)
     {

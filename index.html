@@ -58,7 +58,7 @@
                             <span> Accumulator</span>
                         </div>
                         <div class="halfRow">
-                            <span> PC</span>
+                            <span> Program Counter</span>
                         </div>
                         <div class="halfRow">
                             <span> SIR</span>
@@ -68,6 +68,16 @@
                         </div>
                         <div class="halfRow">
                             <span> MDR</span>
+                        </div>
+                        <div class="halfRow">
+                            <label style="user-select: none;" for="using-cache">
+                                Use cache
+                            </label>
+                        </div>
+                        <div class="halfRow">
+                            <label style="user-select: none;" for="using-pipeline">
+                                Use pipeline
+                            </label>
                         </div>
                     </div>
                     <div class="halfCard">
@@ -108,6 +118,18 @@
                         </div>
                         <div class="halfRow">
                             <input id="memory-data-register" value="000" class="clearInput">
+                        </div>
+                        <div class="halfRow">
+                            <input  class="useCache"
+                                    type="checkbox"
+                                    name="using-cache"
+                                    id="using-cache" />
+                        </div>
+                        <div class="halfRow">
+                            <input  class="usePipeline"
+                                    type="checkbox"
+                                    name="using-pipeline"
+                                    id="using-pipeline">
                         </div>
                     </div>
                 </div>
@@ -173,13 +195,32 @@
                         Terminal
                     </button>
                 </div>
-                <div class="cardHead">
-                    colocar o checkbox
-                </div>
+                
 
                 <!--Cache Table-->
-                <div class="cache-table">
-                    <table id="cache-table"></table>
+                <div class="cache">
+                    <table id="cache-table" class="cache-table">
+                        <tbody id="cache-body">
+                            <tr>
+                                <th>Val</th>
+                                <th>Tag</th>
+                                <th>Data</th>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div class="cardHead">
+                    <span> Cache Console </span>
+                    <button type="submit" onclick="console.log('N FAz nadakkkkkkkkkk')" class="runButton"> Clear </button>
+                </div>
+                <div style="height: 20%;">
+                    <textarea   name="code"
+                                id="cache-console"
+                                cols="30"
+                                rows="10"
+                                class="code"
+                                readonly>
+                    </textarea>
                 </div>
             </div>
             <div class="cardHead">
@@ -214,14 +255,14 @@
             <div class="cardBody">
 
                 <!--RAM Table-->
-                <table id="slots" class="cacheTable"></table>
+                <table id="slots" class="ramTable"></table>
 
             </div>
             <div class="cardHead">
                 <button type="submit" onclick="load()" class="runButton">
                     Load current code to RAM
                 </button>
-                <button type="submit" onclick="run ()" class="runButton">
+                <button type="submit" onclick="run()" class="runButton">
                     Run Code
                 </button>
             </div>

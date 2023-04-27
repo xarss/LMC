@@ -248,7 +248,7 @@
 
 
 
-.cacheTable
+.ramTable
 {
     background-color: var(--main-dark);
     padding: 0;
@@ -275,10 +275,27 @@
     background-color: rgb(252, 252, 252);
 }
 
-.cache-table
+.cache
 {
     background-color: var(--main-dark);
     flex-grow: 1;
+}
+
+.cache-table
+{
+    width: 100%;
+    height: 100%;
+}
+
+.cache-table th
+{
+    background-color: var(--main);
+    height: 30px;
+}
+
+.cache-table td
+{
+    border: solid 1px var(--main-light);
 }
 
 .color
@@ -286,6 +303,13 @@
     border: none;
     background-color: transparent;
     margin-right: 2%;
+}
+
+.flex-center
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .slotBody
