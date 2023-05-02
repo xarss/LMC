@@ -7,7 +7,7 @@
   <h1> Little Man Computer </h1>
 
   [PTBR Documentation](README-PTBR.md)
-  | [Website](xarss.github.io/LMC/)
+  | [Simulator](https://xarss.github.io/LMC/)
   | [Commands](#commands-and-structure)
 
   <img src="https://img.shields.io/badge/Version-0.9-303060"/>
