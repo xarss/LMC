@@ -37,13 +37,13 @@ Codes for Little Man Computers are a set of simple instructions that simulate th
 This code takes one input and counts from it to 0.
 
 ```js
-	    INP
+	INP
 loop:	OUT
-	    STA count
-	    SUB one
-	    STA count
-	    BRP loop
-	    HLT
+	STA count
+	SUB one
+	STA count
+	BRP loop
+	HLT
 
 one     DAT 1
 count	DAT
@@ -51,12 +51,12 @@ count	DAT
 
 This code adds the inputed numbers
 ```js
-	    INP
-	    STA	number     
-	    INP     
-	    ADD	number
-	    OUT
-	    HLT
+	INP
+	STA	number     
+	INP     
+	ADD	number
+	OUT
+	HLT
 
 number	DAT
 ```
@@ -86,7 +86,7 @@ Branching to Labels using any of the [jump](#jumps) commands.
 
 <table width="100%" style="font-size:large">
 
-<tr>
+<tr width="100%">
   <td width="33%" align="top">
   
   * [Input](#input)
@@ -269,16 +269,16 @@ y DAT 12
 ```
 ### When using DAT, commands accept the position name
 
-```bash
+```js
       LDA x
       STA y
       ADD z
-      SUB var
+      SUB name
 
 x     DAT
 y     DAT
 z     DAT 1
-var   DAT 3
+name  DAT 3
 ```
 
 ## Jumps
