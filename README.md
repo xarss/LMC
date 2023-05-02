@@ -80,7 +80,7 @@ anyname:  INP
           HLT
 ```
 
-Branching to Labels using any of the [jump](#jumps) commands.
+To branch to a certain label use [jump](#jumps) commands.
 
 ## All Commands
 
