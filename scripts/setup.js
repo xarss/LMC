@@ -1,5 +1,6 @@
 var cardState = true;
-const cacheSize = 4;
+const defaultLanguage = "english";
+var currentLanguage = defaultLanguage;
 
 // var clockSpeed   = document.getElementById("slider").value;
 var clockSpeed = 1000;
@@ -46,8 +47,8 @@ function slotter(index) {
 function setClockSpeed()
 {
     document.getElementById('clockInput').value = document.getElementById('slider').value;
-    clockSpeed = 500 - document.getElementById("clockInput").value;
-    document.getElementById("current-clock-speed").innerHTML = ((document.getElementById('clockInput').value/1000)*3).toFixed(1) + " IPS";
+    clockSpeed = 700 - 500 * ((document.getElementById("clockInput").value - 0.1) / 10);
+    document.getElementById("current-clock-speed").innerHTML = (document.getElementById('clockInput').value/10).toFixed(1);
 }
 
 function generateGrid() {
@@ -72,81 +73,13 @@ function changeColor() {
     css.style.setProperty("--secondary", color)
 }
 
-function generateInfoTable() {
-    let contentBody = [
-        {
-            "command_name": "Input",
-            "syntax": "INP",
-            "description": "Gets an input from user.",
-            "opcode": "901"
-        },
-        {
-            "command_name": "Output",
-            "syntax": "OUT",
-            "description": "Outputs the accumulator's value on the output terminal.",
-            "opcode": "902"
-        },
-        {
-            "command_name": "Add",
-            "syntax": "ADD [value]",
-            "description": "Adds the specified value to the accumulator.",
-            "opcode": "1xx"
-        },
-        {
-            "command_name": "Subtract",
-            "syntax": "SUB [value]",
-            "description": "Subtracts the specified value to the accumulator.",
-            "opcode": "2xx"
-        },
-        {
-            "command_name": "Load",
-            "syntax": "LDA [memory address]",
-            "description": "Loads the accumulator with the content stored at the given memory address.",
-            "opcode": "5xx"
-        },
-        {
-            "command_name": "Store",
-            "syntax": "STA [memory address]",
-            "description": "Stores the accumulator's value inside the given memory address.",
-            "opcode": "3xx"
-        },
-        {
-            "command_name": "Branch Always",
-            "syntax": "BRA [label]",
-            "description": "Jump to given label.",
-            "opcode": "6xx"
-        },
-        {
-            "command_name": "Branch If Positive",
-            "syntax": "BRP [label]",
-            "description": "Jump to given label if the content in the accumulator is positive.",
-            "opcode": "8xx"
-        },
-        {
-            "command_name": "Branch If Zero",
-            "syntax": "BRZ [label]",
-            "description": "Jump to given label if the content in the accumulator is equal to zero.",
-            "opcode": "7xx"
-        },
-        {
-            "command_name": "Halt",
-            "syntax": "HLT",
-            "description": "Stops the code.",
-            "opcode": "000"
-        },
-        {
-            "command_name": "Data Location",
-            "syntax": "DAT [name] [value]",
-            "description": "Associate a label to a memory address, if given a value, it will store it in memory. (value is optional)",
-            "opcode": ""
-        }
-    ]
-
+function generateInfoTable(lang) {
     const tableHead = document.getElementById("info-table-head");
     const tableBody = document.getElementById("info-table-body");
-    tableHead.innerHTML = "<tr><th>Command Name</th><th>Syntax</th><th>Description</th><th>Opcode</th></tr>";
+    tableHead.innerHTML = "<tr><th class='commandname'></th><th class='syntax'></th><th class='description'></th><th>Opcode</th></tr>";
+    tableBody.innerHTML = "";
 
-    contentBody.forEach(element => {
+    commands[lang].forEach(element => {
         tableBody.innerHTML +=
             "<tr>" +
             `<td>${element.command_name}</td>` +
@@ -234,12 +167,42 @@ function newCacheLine(index)
 
 function generateCache()
 {
-    let body = document.getElementById("cache-body");
+    let body = document.getElementById( "cache-body" );
+    body.innerHTML  = "<tr><th> Val  </th><th> Tag  </th><th> Data </th></tr>";
+    
+    document.getElementById( "cache-table" ).style.display = "table";
+    document.getElementById( "no-cache"    ).style.display = "none";
 
-    for(let i = 0; i < cacheSize; i++)
+    for(let i = 0; i < myCache.num_linhas; i++)
     {
         body.appendChild( newCacheLine(i) );
     }
+}
+
+function setLang(lang)
+{
+    currentLanguage = lang;
+    generateInfoTable(lang);
+
+    if(lang === "portuguese")
+    {
+        document.getElementById("portuguese").className = "switch-left-active";
+        document.getElementById("english")   .className = "switch-right-inactive";
+    }
+    else
+    {
+        document.getElementById("portuguese").className = "switch-left-inactive";
+        document.getElementById("english")   .className = "switch-right-active";
+    }
+
+    Object.keys(text[lang]).forEach(key => {
+        Array.from(document.getElementsByClassName(key)).forEach(element => {
+            element.innerHTML = text[lang][key];
+        }) 
+    });
+
+    document.getElementById("code").placeholder = text[lang]["codeplaceholder"];
+    document.getElementById("input").placeholder = text[lang]["inputplaceholder"];
 }
 
 function pasteCodeExample()
@@ -253,6 +216,24 @@ function pasteCodeExample()
     }
     
     codeEditor.value = codes[currentCode];
+    
+    let inputTerminal = document.getElementById('input');
+    if (currentCode == "add2")
+    {
+        inputTerminal.value = "2 2";
+    }
+    if (currentCode == "countdown")
+    {
+        inputTerminal.value = "5";
+    }
+    if (currentCode == "sort3")
+    {
+        inputTerminal.value = "250 150 50";
+    }
+    if (currentCode == "custom")
+    {
+        inputTerminal.value = "";
+    }
 }
 
 document.getElementById('code').addEventListener('keydown', function(e) {
@@ -267,9 +248,6 @@ document.getElementById('code').addEventListener('keydown', function(e) {
 });
 
 
-//Define initial clock speed
-//document.getElementById("current-clock-speed").innerHTML = ((300/1000)*3).toFixed(1) + " IPS";
-
-generateCache();
-generateInfoTable();
+setClockSpeed();
 generateGrid();
+setLang(defaultLanguage);

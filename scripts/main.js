@@ -11,6 +11,8 @@ const conso     = {};
 const ram       = {};
 const accum     = {};
 
+var currentTheme = "dark";
+
 // Machine Cycle 
 
 var myCache = null;
@@ -20,6 +22,7 @@ var canFetch    = true;
 var executePos  = null;
 var usingPipeline = false;
 var usingCache  = false;
+var inputs = [];
 
 
 // KEYWORD => OPCODE
@@ -40,90 +43,104 @@ const generators =
 }
 
 // BRA
-functions["6"] = async function(newPos) {
-    conso.log("Jumping to postion " + newPos)
+functions["6"] = async function(newPos) 
+{
+    conso.log(text[currentLanguage]['consolebranch'](newPos));
     pos = newPos;
     canFetch = true;
 };
 
 // BRP
-functions["8"] = async function(newPos) {
-    if (accum.get() > 0) {
-        conso.log("Jumping to postion " + newPos)
+functions["8"] = async function(newPos) 
+{
+    if (accum.get() > 0) 
+    {
+        conso.log(text[currentLanguage]['consolebranch'](newPos));
         pos = newPos;
         canFetch = true;
         return;
     }
-    conso.log("Ignoring BRP");
+    conso.log(text[currentLanguage]['consoleignorebrp']());
     pos++;
     canFetch = true;
 };
 
 // BRZ
-functions["7"] = async function(newPos) {
-    if (accum.get() == 0) {
-        conso.log("Jumping to postion " + newPos)
+functions["7"] = async function(newPos) 
+{
+    if (accum.get() == 0) 
+    {
+        conso.log(text[currentLanguage]['consolebranch'](newPos));
         pos = newPos;
         canFetch = true;
         return;
     }
-    conso.log("Ignoring BRZ");
+    conso.log(text[currentLanguage]['consoleignorebrz']());
     pos++;
     canFetch = true;
 };
 
 // INP & OUT
-functions["9"] = async function(value) {
+functions["9"] = async function(value) 
+{
     if(value == "01")
     {
-        conso.log("Getting input");
-        let input = prompt('Input: ');
-        accum.set(input)
-        document.getElementById("input").value += input + "\n";
+        if (inputs.length > 0)
+        {
+            let input = inputs.shift();
+            accum.set(input);
+            conso.log(text[currentLanguage]['consoleinput'](input));
+        }
+        else
+        {
+            conso.log(text[currentLanguage]['consoleinput'](0));
+            accum.set(0);
+        }
     }
     else
     {
-        conso.log("Outputing accumulator value");
-        document.getElementById("output").value += accum.get() + "\n";
+        let outputValue = accum.get();
+        conso.log(text[currentLanguage]['consoleoutput'](outputValue));
+        document.getElementById("output").value += outputValue + "\n";
     }
-    //pos++;
 }
 
 // HLT
-functions["0"] = async function() {
-    conso.log("Ending program");
+functions["0"] = async function() 
+{
+    conso.log(text[currentLanguage]['consolehalt']());
     pos = -1;
 }
 
 // ADD
-functions["1"] = async function(p) {
+functions["1"] = async function(p) 
+{
     let value = ram.get(p);
-    conso.log("Adding " + value + " to accumulator");
+    conso.log(text[currentLanguage]['consoleadd'](value));
     accum.set(parseInt(accum.get()) + parseInt(value));
-    //pos++;
 }
 
 // SUB
-functions["2"] = async function(p) {
+functions["2"] = async function(p) 
+{
     let value = ram.get(p);
-    conso.log("Subtracting " + value + " from accumulator");
+    conso.log(text[currentLanguage]['consolesub'](value));
     accum.set(parseInt(accum.get()) - parseInt(value));
-    //pos++;
 }
 
 // STA
-functions["3"] = async function(p) {
+functions["3"] = async function(p) 
+{
     let value = accum.get();
-    conso.log("Storing at " + p + " value: " + value)
+    conso.log(text[currentLanguage]['consolesta'](p, value));
     ram.add(p, value);
-    //pos++;
 }
 
 // LDA
-functions["5"] = async function(p) {
-    conso.log("Loading from " + p + " to accumulator");
+functions["5"] = async function(p) 
+{
+    conso.log(text[currentLanguage]['consolelda'](p));
     accum.set(ram.get(p));
-    //pos++;
 }
 
 // ------------------------------------------------ //
@@ -152,6 +169,33 @@ function lowCounter(lista)
     return indiceMenor;
 }
 
+function changeTheme()
+{
+    const root = document.documentElement;
+    document.getElementById("theme-button").innerHTML = currentTheme + "_mode"
+
+    if(currentTheme === "dark")
+    {
+        currentTheme = "light"
+    }
+    else
+    {
+        currentTheme = "dark"
+        
+    }
+
+    Object.keys(theme[currentTheme]).forEach(key =>
+    {
+        root.style.setProperty(key, theme[currentTheme][key]);
+    })
+
+    for(let i = 0; i < 100; i++)
+    {
+        const slotH = document.getElementById("h_" + i);
+        slotH.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(theme[currentTheme]['--main']);
+    }
+}
+
 class CacheMemory {
     constructor(num_linhas)
     {
@@ -165,42 +209,42 @@ class CacheMemory {
         {
             this.cache.push({"validade": 0, "tag": 'null', "dado": 'null'});
         }
-        this.updateCacheVisual();
+        generateCache()
     }
 
     async updateCacheVisual()
     {
         for(let i = 0; i < this.num_linhas; i++)
         {
-            let tRow = document.getElementById('r_' + i);
-            let tTag = document.getElementById('t_' + i);
-            let tValid = document.getElementById('v_' + i);
-            let tData = document.getElementById('d_' + i);
+            const tRow = document.getElementById('r_' + i);
+            const tTag = document.getElementById('t_' + i);
+            const tValid = document.getElementById('v_' + i);
+            const tData = document.getElementById('d_' + i);
             tTag.value = this.cache[i].tag;
             tValid.value = this.cache[i].validade;
             tData.value = this.cache[i].dado; 
             let newPos = parseInt((this.cache[i].tag + this.cache[i].dado), 2);
-            let slot = document.getElementById('h_' + newPos);
-            slot.style.backgroundColor = "#7b4657";
-            tRow.style.backgroundColor = "#7b4657";
+            const slot = document.getElementById('h_' + newPos);
+            slot.style.backgroundColor = instructionColors["cache"];
+            tRow.style.backgroundColor = instructionColors["cache"];
             await sleep(50);
-            tRow.style.backgroundColor = "transparent";
-            slot.style.backgroundColor = "transparent";
+            tRow.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(theme[currentTheme]['--main']); 
+            slot.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(theme[currentTheme]['--main']); 
         }
     }
 
     accessCache(address)
     {
         let [tag, dado] = tuc(address, this.num_linhas/2);
-        for(let i = 0; i < this.cache.length; i++)
+        for(let i = 0; i < this.num_linhas; i++)
         {
             if (this.cache[i]["validade"] == 1 && this.cache[i]['tag'] == tag && this.cache[i]['dado'] == dado)
             {
-                CacheMemory.log("CACHE HIT at ADDRESS: " + tag + dado);
+                CacheMemory.log(text[currentLanguage]['cachehit'](tag + dado));
                 return 'hit';
             }
         }
-        CacheMemory.log("CACHE MISS at ADDRESS: " + tag + dado);
+        CacheMemory.log(text[currentLanguage]['cachemiss'](tag + dado));
         this.storeCache(address);
         return 'miss';
     }
@@ -211,25 +255,26 @@ class CacheMemory {
         for(let i = 0; i < this.num_linhas; i++)
         {
             let cAddress = (mypos + i).toString(2).padStart(7, "0");
-            // console.log("pos: " + (mypos+i) + " address: " + cAddress);
             let [tag, dado] = tuc(cAddress, this.num_linhas/2);
             
             this.cache[i]['validade'] = 1;
             this.cache[i]['tag'] = tag;
             this.cache[i]['dado'] = dado;
-            console.log(`Dado ${dado} i: ${i}`);
         }
         this.updateCacheVisual();
     }
     static log(text)
     {
-        let console = document.getElementById("cache-console");
+        const console = document.getElementById("cache-console");
         let old = console.value;
         console.value = text + "\n" + old;
     }
+    static logClear()
+    {
+        const console = document.getElementById("cache-console");
+        console.value = "";
+    }
 }
-
-
 
 conso.clear = () => document.getElementById("console").value = "";
 conso.log = (text) =>
@@ -247,16 +292,18 @@ ram.add = (index, value = 0) =>
 
 ram.get = (index) =>
 {
-    if (index in variables) {
-        return document.getElementById("c_"+variables[index]);
+    if (index in variables) 
+    {
+        return document.getElementById("c_" + variables[index]);
     }
-    return document.getElementById("c_"+index).value;
+    return document.getElementById("c_" + index).value;
 }
 
 ram.newSlot = () =>
 {
     let used = [];
-    for (const [key, _] of Object.entries(variables)) {
+    for (const [key, _] of Object.entries(variables)) 
+    {
         used.push(variables[key]);
     }
     index = initVarPos;
@@ -274,7 +321,6 @@ ram.newSlot = () =>
 
 ram.clear = () =>
 {
-    document.getElementById("input").value = "";
     document.getElementById("output").value = "";
     variables = {};
     labels = {};
@@ -284,11 +330,12 @@ ram.clear = () =>
     canFetch   = true;
     executePos = null;
     generateGrid();
+    myCache = null;
 }
 
 accum.get = () =>
 {
-    return document.getElementById("accum").value
+    return document.getElementById("accum").value;
 }
 
 accum.set = (value) =>
@@ -304,7 +351,6 @@ const DAT   = (name, value) =>
     {
         variables[name] = p;
         ram.add(p, value);
-        //document.getElementById("h_"+position).innerHTML = param[0];
     }
 }
 
@@ -327,9 +373,9 @@ async function slotSelect(p, color, cacheOn = false)
     let slot = document.getElementById("h_" + p);
     if(cacheOn)
     {
-        let tRow = document.getElementById("r_" + pos % 4);
+        let tRow = document.getElementById("r_" + pos % myCache.num_linhas);
         tRow.style.backgroundColor = color;
-        await sleep(50);
+        await sleep(5);
         tRow.style.backgroundColor = "transparent";
     }
     else
@@ -345,25 +391,34 @@ async function fetch()
     if (canFetch)
     {
         pos = parseInt(pos);
+        let fetchedAddress = pos.toString(2).padStart(7, "0"); // Pega o id do slot e transforma em binário de 7 bits
         if(usingCache && myCache !== null)
         {
-            if(myCache.accessCache(pos.toString(2).padStart(7, "0")) == 'hit')
+            if(await myCache.accessCache(pos.toString(2).padStart(7, "0")) == 'hit')
             {
-                await slotSelect(pos, "7b7246", true);
+                await slotSelect(pos, instructionColors["fetch"], true);
+                fetchedData.push(fetchedAddress); // Guarda na lista de fetch
+                canFetch = false;
+                return;
             }
             else
             {
-                await slotSelect(pos, "7b7246"); //Amarelo
+                await slotSelect(pos, instructionColors["fetch"]);
             }
         }
         else
         {
-            await slotSelect(pos, "7b7246");
+            await slotSelect(pos, instructionColors["fetch"]);
         }
-        //await sleep(clockSpeed);
-        let fetchedAddress = pos.toString(2).padStart(7, "0"); // Pega o id do slot e transforma em binário de 7 bits
         fetchedData.push(fetchedAddress); // Guarda na lista de fetch
-        conso.log("Fetched: "+ fetchedAddress)
+        if (currentLanguage == 'english')
+        {
+            conso.log("Fetched: "+ fetchedAddress);
+        }
+        else
+        {
+            conso.log("Resgatado: "+ fetchedAddress);
+        }
         canFetch = false;
     }
 }
@@ -376,15 +431,21 @@ async function decode()
         let codedAddress = fetchedData.splice(0, 1); // Pega a instrução na ram em formato binário.
         executePos = parseInt(codedAddress[0], 2)
         let decodedAddress = ram.get(executePos); // Traduz para instrução em decimal.
-        conso.log("decoded: "+ decodedAddress);
+        if (currentLanguage == "english")
+        {
+            conso.log("Decoded: "+ decodedAddress);
+        }
+        else
+        {
+            conso.log("Decodificado: "+ decodedAddress);
+        }
         let firstDigit = parseInt(decodedAddress.toString().charAt(0))
         if (![6, 7, 8, 0].includes(firstDigit)) // Se for branch ou halt
         {
             pos++;
             canFetch = true;
         }
-        await slotSelect(executePos, "464d7b"); //Azul
-        //await sleep(clockSpeed);
+        await slotSelect(executePos, instructionColors["decode"]);
         decodedData.push(decodedAddress); // Guarda a instrução na lista de instruções
     }
 }
@@ -398,23 +459,44 @@ async function execute()
         if ([6,7,8].includes(func))
         {
             functions[func](param);
-            await slotSelect(executePos, "467b49"); //Verde
+            await slotSelect(executePos, instructionColors["execute"]); //Verde
             return;
         }
         functions[func](param);
-        await slotSelect(executePos, "467b49"); //Verde
+        await slotSelect(executePos, instructionColors["execute"]); //Verde
     }
 }
 
 async function run()
 {   
-    myCache = new CacheMemory(4);
-    myCache.initCache();
+    inputs = document.getElementById('input').value.split(" ");
+    inputs = inputs.filter(element => element != "");
+    let allInt = true;
+
+    for (const input of inputs) 
+    {
+        if (!Number.isInteger(parseFloat(input))) 
+        {
+            allInt = false;
+            break;
+        }
+    }
+
+    if (!allInt) 
+    {
+        window.alert(text[currentLanguage]["invalidinputs"]);
+        return;
+    } 
+
+    const start = performance.now();
     usingPipeline = document.getElementById('using-pipeline').checked;
-    usingCache = document.getElementById('using-cache').checked;
-    const inicio = performance.now();
     while(pos != -1)
     {
+        if (pos == initVarPos)
+        {
+            window.alert(text[currentLanguage]["missinghalt"]);
+            break;
+        }
         if (!usingPipeline) 
         {
             await fetch()
@@ -426,8 +508,8 @@ async function run()
             await Promise.all([execute(), decode(), fetch()]);
         }
     }
-    const fim = performance.now();
-    conso.log(`Execution time: ${(fim - inicio)/1000} seconds`);
+    const end = performance.now();
+    conso.log(text[currentLanguage]['executiontime'](start, end));
 }
 
 function process(line, cl)
@@ -468,4 +550,19 @@ function load()
     {
         ram.add(i, generators[op](xx));
     });
+    usingCache = document.getElementById('using-cache').checked;
+    if (usingCache)
+    {
+        let cacheSize = getCheckedRadioValue("opcao");
+        myCache = new CacheMemory(cacheSize);
+        myCache.initCache();
+    }
 }
+
+function getCheckedRadioValue(name) 
+{
+    var radioButtons = document.querySelectorAll('input[type="radio"][name="' + name + '"]');
+    var checkedButton = Array.from(radioButtons).find(radio => radio.checked);
+    return checkedButton ? checkedButton.value : null;
+}
+  

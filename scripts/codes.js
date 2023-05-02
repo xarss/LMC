@@ -55,3 +55,9 @@ second\tDAT
 third\tDAT
 temp\tDAT`;
    
+codes["countdownALT"] = `\tLDA\tcount\nloop:\tOUT
+\tSTA\tcount
+\tSUB\tone
+\tSTA\tcount
+\tBRP\tloop
+\tHLT\n\none\tDAT\t1\ncount\tDAT\t3`;

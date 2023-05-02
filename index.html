@@ -7,33 +7,68 @@
     <!--Imports-->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <script src="scripts/themes.js" defer></script>
+    <script src="scripts/colors.js" defer></script>
+    <script src="scripts/commands.js" defer></script>
+    <script src="scripts/lang.js" defer></script>
     <script src="scripts/codes.js" defer></script>
     <script src="scripts/main.js" defer></script>
     <script src="scripts/setup.js" defer></script>
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="style.css">
 
-    <title>LMC</title>
+    <title>Little Man Computer</title>
 </head>
 <body>
 
     <!--Header-->
-    <div class="toolbar">
-        <span class="title"> Little Man Computer </span>
+    <div class="toolbar hText">
+        <span class="title hText"> Little Man Computer </span>
         <span class="spacer"></span>
-        <a href="javascript:Overlay()" style="color: var(--text);">
-            <span> Commands </span>
+        <a href="javascript:Overlay()">
+            <span class="commands hText"></span>
         </a>
         <span class="spacer"></span>
-        <a href="https://github.com/xarss/LMC" target="_blank" style="color: var(--text);">
-            <span style="font-size: small; padding-right: 40px;">
-                Documentation
-            </span>
+
+        <a href="https://github.com/xarss/LMC" target="_blank">
+            <span style="font-size: small; padding-right: 40px;" class="documentation hText"></span>
         </a>
+
         <span class="spacer"></span>
-        <span> Version: 0.8 </span>
+
+        <span class="version hText"></span><span class="hText">: 0.9 </span>
+
         <span class="spacer"></span>
-        <span> by: Chico & Tuza </span>
+
+        <span class="by hText"></span><span class="hText">:</span>
+
+        <a style="margin-left: 10px;" href="https://github.com/xarss" target="_blank" class="hText">
+            Guilherme Schwarz
+        </a>
+
+        <a style="margin-left: 10px;" href="https://github.com/tuzapeno" target="_blank" class="hText">
+            Arthur Salerno
+        </a>
+
+        <span class="spacer"></span>
+
+        <button id="portuguese" class="switch-left-inactive" onclick="setLang('portuguese')">
+            PT-BR
+        </button>
+
+        <button id="english" class="switch-right-active" onclick="setLang('english')">
+            EN-US
+        </button>
+
+        <span class="spacer"></span>
+
+        <button id="theme-button" class="material-symbols-outlined roundButton hText" onclick="changeTheme()">
+            light_mode
+        </button>
     </div>
     
     <!--Body-->
@@ -42,23 +77,23 @@
         <!--Processing Center-->
         <div class="cpu">
             <div class="cardHead">
-                <span>Central Processing Unit</span>
+                <span class="cpuname"></span>
             </div>
                 <div class="tableFlow">
                     <div class="halfCard">
                         <div class="halfHead">
-                            <span>Name</span>
+                            <span class="name"></span>
                         </div>
 
                         <!--Names-->
                         <div class="halfRow">
-                            <span> Clock Speed</span>
+                            <span class="clockspeed"></span>
                         </div>
                         <div class="halfRow">
-                            <span> Accumulator</span>
+                            <span class="accumulator"></span>
                         </div>
                         <div class="halfRow">
-                            <span> Program Counter</span>
+                            <span class="programcounter"></span>
                         </div>
                         <div class="halfRow">
                             <span> SIR</span>
@@ -70,31 +105,30 @@
                             <span> MDR</span>
                         </div>
                         <div class="halfRow">
-                            <label style="user-select: none;" for="using-cache">
-                                Use cache
-                            </label>
+                            <label style="user-select: none;" for="using-cache" class="usecache"></label>
                         </div>
                         <div class="halfRow">
-                            <label style="user-select: none;" for="using-pipeline">
-                                Use pipeline
-                            </label>
+                            Cache Size
+                        </div>
+                        <div class="halfRow">
+                            <label style="user-select: none;" for="using-pipeline" class="usepipeline"></label>
                         </div>
                     </div>
                     <div class="halfCard">
                         <div class="halfHead">
-                            <span>Value</span>
+                            <span class="value"></span>
                         </div>
 
                         <!--Values-->
                         <div class="halfRow">
                             <input 
                                 type="range" 
-                                min="300"
-                                max="500"
+                                min="1"
+                                max="10"
                                 value="1"
-                                step="0.01"
+                                step="1"
                                 id="slider"
-                                style="width: 50%;"
+                                style="width: 45%;"
                                 onchange="setClockSpeed()"
                             />
                             <input
@@ -126,6 +160,20 @@
                                     id="using-cache" />
                         </div>
                         <div class="halfRow">
+                                <label>
+                                    <input type="radio" id="opcao" name="opcao" value="2" checked>
+                                    2
+                                </label>
+                                <label>
+                                    <input type="radio" id="opcao" name="opcao" value="4">
+                                    4
+                                </label>
+                                <label>
+                                    <input type="radio" id="opcao" name="opcao" value="8">
+                                    8
+                                </label>
+                        </div>
+                        <div class="halfRow">
                             <input  class="usePipeline"
                                     type="checkbox"
                                     name="using-pipeline"
@@ -138,16 +186,16 @@
                 <div class="cardHalf">
                         <div class="halfCard">
                             <div class="halfHead">
-                                <span>Input</span> 
+                                <span class="input"></span> 
                             </div>
                             <div class="halfBody">
-                                <textarea name="code" id="input" cols="30" rows="10" class="code" readonly></textarea>
+                                <textarea name="code" id="input" cols="30" rows="10" class="code"></textarea>
                             </div>
                         </div>
         
                         <div class="halfCard">
                             <div class="halfHead">
-                                <span>Output</span> 
+                                <span class="output"></span> 
                             </div>
                             <div class="halfBody">
                                 <textarea name="code" id="output" cols="30" rows="10" class="code" readonly></textarea>
@@ -180,8 +228,7 @@
                             rows="10"
                             class="code"
                             defaultValue=""
-                            spellcheck="false"
-                            placeholder="Code goes here.."></textarea>
+                            spellcheck="false"></textarea>
                 </div>
             </div>
 
@@ -196,22 +243,18 @@
                     </button>
                 </div>
                 
-
                 <!--Cache Table-->
                 <div class="cache">
                     <table id="cache-table" class="cache-table">
-                        <tbody id="cache-body">
-                            <tr>
-                                <th>Val</th>
-                                <th>Tag</th>
-                                <th>Data</th>
-                            </tr>
-                        </tbody>
+                        <tbody id="cache-body"></tbody>
                     </table>
+                    <div id="no-cache">
+                        <div class="cardHead nocache"></div>
+                    </div>
                 </div>
                 <div class="cardHead">
-                    <span> Cache Console </span>
-                    <button type="submit" onclick="console.log('N FAz nadakkkkkkkkkk')" class="runButton"> Clear </button>
+                    <span class="cacheconsole"></span>
+                    <button type="submit" onclick="console.log('N FAz nadakkkkkkkkkk')" class="runButton clear"></button>
                 </div>
                 <div style="height: 20%;">
                     <textarea   name="code"
@@ -225,7 +268,7 @@
             </div>
             <div class="cardHead">
                 <span> Console </span>
-                <button type="submit" onclick="conso.clear()" class="runButton"> Clear </button>
+                <button type="submit" onclick="conso.clear()" class="runButton clear"></button>
             </div>
             <div class="console">
                 <textarea   name="code"
@@ -237,12 +280,13 @@
                 </textarea>
             </div>
             <div class="cardHead">
-                <label> Code: </label>
+                <label class="curcode"></label>:
                 <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
-                    <option value="custom" selected> Custom </option>
-                    <option value="add2">Add two numbers</option>
-                    <option value="sort3">Sort three numbers</option>
-                    <option value="countdown">Countdown timer</option>
+                    <option value="custom" class="custom" selected></option>
+                    <option value="add2" class="addtwonum"></option>
+                    <option value="sort3" class="sortthree"></option>
+                    <option value="countdown" class="countdown"></option>
+                    <!--<option value="countdownALT">Countdown ALT</option>-->
                 </select>
             </div>
         </div>
@@ -250,21 +294,24 @@
         <!--RAM-->
         <div class="randomAcessMemory">
             <div class="cardHead">
-                <span>Random Access Memory</span>
+                <span class="ramname"></span>
             </div>
             <div class="cardBody">
 
                 <!--RAM Table-->
                 <table id="slots" class="ramTable"></table>
 
+                <!--Colors-->
+                <div class="cardHead">
+                    <div style="color:#cfbf6e">&#9632;</div> <span class="fetch"></span>
+                    <div style="color:#464d7b">&#9632;</div> <span class="decode"></span>
+                    <div style="color:#467b49">&#9632;</div> <span class="execute"></span>
+                    <div style="color:#7b4657">&#9632;</div> <span class="updatecache"></span>
+                </div>
             </div>
             <div class="cardHead">
-                <button type="submit" onclick="load()" class="runButton">
-                    Load current code to RAM
-                </button>
-                <button type="submit" onclick="run()" class="runButton">
-                    Run Code
-                </button>
+                <button type="submit" onclick="load()" class="runButton loadtoram"></button>
+                <button type="submit" onclick="run()" class="runButton runcode"></button>
             </div>
         </div>
     </div>
@@ -277,12 +324,10 @@
 <div id="overlay" class="overlay">
     <div id="overlay-content" class="overlay-content">
     <div class="toolbar">
-        <h2>Command List</h2>
+        <h2 class="commandlist"></h2>
         <span class="spacer"></span>
-        <button class="roundButton" onclick="Overlay()">
-            <span class="material-symbols-outlined">
-                close
-            </span>
+        <button class="material-symbols-outlined roundButton" onclick="Overlay()">
+            close
         </button>
     </div>
       <table class="info-table">

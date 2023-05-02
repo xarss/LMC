@@ -2,7 +2,7 @@
 {
     border: none;
     resize: none;
-    color: white;
+    color: var(--text);
     font-size: large;
     box-sizing: border-box;
     padding-left: 10px;
@@ -20,7 +20,7 @@
 {
     height: 100%;
     background-color: transparent;
-    border: solid 1px white;
+    border: solid 1px var(--text);
     border-radius: 5px;
     display: flex;
     flex-direction: column;
@@ -41,7 +41,7 @@
 .selected-input
 {
     color: black;
-    background-color: white;
+    background-color: var(--text);
 }
 
 .accBody
@@ -60,6 +60,8 @@
     align-items: center;
     justify-content: center;
     height: 30px;
+    min-height: 30px;
+    background-color: var(--main);
 }
 
 .darkCardHead
@@ -127,6 +129,7 @@
     display: flex;
     flex-direction: column;
     width: 100%;
+    min-height: 0;
     flex-grow: 1;
     border-radius: 10px;
     background-color: var(--main);
@@ -253,7 +256,7 @@
     background-color: var(--main-dark);
     padding: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 30px);
 }
 
 .slotHeader, .selected-slotHeader
@@ -283,8 +286,15 @@
 
 .cache-table
 {
+    display: none;
     width: 100%;
     height: 100%;
+}
+
+.cache-table tr
+{
+    flex-grow: 1;
+    min-height: 0;
 }
 
 .cache-table th
@@ -329,7 +339,7 @@
     border-radius: 5px;
     border-color: var(--main-light);
     text-align: center;
-    color: rgb(174, 174, 174);
+    color: var(--main-light);
     width: 60%;
     background-color: transparent;
 }
@@ -357,7 +367,7 @@
     background-color: transparent !important; 
     color: var(--text);
     border: solid 1px;
-    background-color: white;
+    background-color: var(--text);
     border-radius: 10px;
 }
 
@@ -380,13 +390,12 @@
 .roundButton
 {
     padding: 0;
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
     border: none;
-    color: white;
+    color: var(--text);
     border-radius: 15px;
-    font-size: large;
-    font-family: fantasy;
+    font-size: medium;
     background-color: rgba(0,0,0,0.1);
 }
 
@@ -437,7 +446,7 @@
 .info-table th, td
 {
     min-height: calc(100% / 12);
-    border: 1px solid whitesmoke;
+    border: 1px solid var(--main-light);
     text-align: left;
 }
 .info-table th
@@ -473,15 +482,53 @@
     cursor: pointer;
 }
 
+.hText
+{
+    color: var(--header);
+}
+
 .title
 {
     font-size: large;
 }
 
+.switch-left-active,
+.switch-right-active,
+.switch-left-inactive,
+.switch-right-inactive
+{
+    border: none;
+    color: var(--header);
+    border-radius: 10px 0 0 10px;
+    background-color: rgba(0, 0, 0, 0.25);
+}
+
+.switch-right-active,
+.switch-right-inactive
+{
+    border-radius: 0 10px 10px 0;
+}
+
+.switch-right-inactive,
+.switch-left-inactive
+{
+    border: none;
+    color: var(--main-light);
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.switch-left-active:hover,
+.switch-right-active:hover,
+.switch-left-inactive:hover,
+.switch-right-inactive:hover
+{
+    cursor: pointer;
+}
+
 select
 {
     background-color: var(--main);
-    color: white;
+    color: var(--text);
     border: solid 1px var(--main-light);
     border-radius: 5px;
 }
