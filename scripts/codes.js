@@ -9,7 +9,7 @@ codes["add2"] = `\tINP
 
 codes["custom"] = ""
 
-codes["countdown"] = `\tINP\nloop:\tOUT
+codes["countdown"] = `\tINP\nloop\tOUT
 \tSTA\tcount
 \tSUB\tone
 \tSTA\tcount
@@ -23,7 +23,7 @@ codes["sort3"] = `\tINP
 \tINP
 \tSTA\tthird
 \tBRA\tloop
-loop:\tLDA\tfirst
+loop\tLDA\tfirst
 \tSUB\tsecond
 \tBRP\tswapf
 \tLDA\tsecond
@@ -36,14 +36,14 @@ loop:\tLDA\tfirst
 \tLDA\tthird
 \tOUT
 \tHLT
-swapf:\tLDA\tfirst
+swapf\tLDA\tfirst
 \tSTA\ttemp
 \tLDA\tsecond
 \tSTA\tfirst
 \tLDA\ttemp
 \tSTA\tsecond
 \tBRA\tloop
-swaps:\tLDA\tsecond
+swaps\tLDA\tsecond
 \tSTA\ttemp
 \tLDA\tthird
 \tSTA\tsecond

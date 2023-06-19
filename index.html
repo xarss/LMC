@@ -27,7 +27,7 @@
 
     <!--Header-->
     <div class="toolbar hText">
-        <span class="title hText"> Little Man Computer </span>
+        <span class="title hText"> Little Man Computer</span>
         <span class="spacer"></span>
         <a href="javascript:Overlay()">
             <span class="commands hText"></span>
@@ -40,7 +40,11 @@
 
         <span class="spacer"></span>
 
-        <span class="version hText"></span><span class="hText">: 0.9 </span>
+        <a class="hText aboutus" href="https://github.com/xarss/LMC#about-us"></a>
+
+        <span class="spacer"></span>
+
+        <span class="version hText"></span><span class="hText">: 1.0 </span>
 
         <span class="spacer"></span>
 
@@ -74,151 +78,79 @@
     <!--Body-->
     <div class="lmc">
 
-        <!--Processing Center-->
+        <!--CPU-->
         <div class="cpu">
             <div class="cardHead">
                 <span class="cpuname"></span>
             </div>
-                <div class="tableFlow">
-                    <div class="halfCard">
-                        <div class="halfHead">
-                            <span class="name"></span>
-                        </div>
 
-                        <!--Names-->
-                        <div class="halfRow">
-                            <span class="clockspeed"></span>
-                        </div>
-                        <div class="halfRow">
-                            <span class="accumulator"></span>
-                        </div>
-                        <div class="halfRow">
-                            <span class="programcounter"></span>
-                        </div>
-                        <div class="halfRow">
-                            <span> SIR</span>
-                        </div>
-                        <div class="halfRow">
-                            <span> MAR</span>
-                        </div>
-                        <div class="halfRow">
-                            <span> MDR</span>
-                        </div>
-                        <div class="halfRow">
-                            <label style="user-select: none;" for="using-cache" class="usecache"></label>
-                        </div>
-                        <div class="halfRow">
-                            Cache Size
-                        </div>
-                        <div class="halfRow">
-                            <label style="user-select: none;" for="using-pipeline" class="usepipeline"></label>
-                        </div>
-                    </div>
-                    <div class="halfCard">
-                        <div class="halfHead">
-                            <span class="value"></span>
-                        </div>
+            <!--Controls-->
+            <div class="cardHead">
+                <button class="material-symbols-outlined roundButton has-border" onclick="run()">
+                    play_arrow
+                </button>
+            </div>
 
-                        <!--Values-->
-                        <div class="halfRow">
-                            <input 
-                                type="range" 
-                                min="1"
-                                max="10"
-                                value="1"
-                                step="1"
-                                id="slider"
-                                style="width: 45%;"
-                                onchange="setClockSpeed()"
-                            />
-                            <input
-                                id="clockInput"
-                                type="hidden"
-                                value="300"
-                            />
-                            <span id="current-clock-speed"></span>
+            <!--Clockspeed-->
+            <div class="cardLine">
+                <span class="clockspeed tooltip" style="width: 45%; margin-left: 5%"><span class="tooltiptext clkExp"></span></span>
+                <div style="width: 50%;">
+                    <input 
+                        type="range" 
+                        min="1"
+                        max="10"
+                        value="1"
+                        step="1"
+                        id="slider"
+                        onchange="setClockSpeed()"
+                    />
+                    <span id="current-clock-speed"></span>
+                </div>
+            </div>
+
+            <!--Accumulator-->
+            <div class="cardLine">
+                <span class="accumulator tooltip" style="width: 45%; margin-left: 5%;">  </span>
+                
+                <input id="accum" value="000" class="clearInput" style="width: 50%; margin: 0 20px">
+            </div>
+
+            <!--PC, SIR, MAR & MDR-->
+            <table class="cpu-table">   
+            <tbody>
+                <tr>
+                    <th class="tooltip">PC <span class="tooltiptext pcExp"> </span></th>
+                    <th class="tooltip">CIR<span class="tooltiptext cirExp"></span></th></th>
+                    <th class="tooltip">MAR<span class="tooltiptext marExp"></span></th></th>
+                    <th class="tooltip">MDR<span class="tooltiptext mdrExp"></span></th></th>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="centered">
+                            <input id="program-counter"              value="000" class="clearInput">
                         </div>
-                        <div class="halfRow">
-                            <input id="accum" value="000" class="clearInput">
-                        </div>
-                        <div class="halfRow">
-                            <input id="program-counter" value="000" class="clearInput">
-                        </div>
-                        <div class="halfRow">
+                    </td>
+                    <td>
+                        <div class="centered">
                             <input id="current-instruction-register" value="000" class="clearInput">
                         </div>
-                        <div class="halfRow">
-                            <input id="memory-address-register" value="000" class="clearInput">
+                    </td>
+                    <td>
+                        <div class="centered">
+                            <input id="memory-address-register"      value="000" class="clearInput">
                         </div>
-                        <div class="halfRow">
-                            <input id="memory-data-register" value="000" class="clearInput">
+                    </td>
+                    <td>
+                        <div class="centered">
+                            <input id="memory-data-register"         value="000" class="clearInput">
                         </div>
-                        <div class="halfRow">
-                            <input  class="useCache"
-                                    type="checkbox"
-                                    name="using-cache"
-                                    id="using-cache" />
-                        </div>
-                        <div class="halfRow">
-                                <label>
-                                    <input type="radio" id="opcao" name="opcao" value="2" checked>
-                                    2
-                                </label>
-                                <label>
-                                    <input type="radio" id="opcao" name="opcao" value="4">
-                                    4
-                                </label>
-                                <label>
-                                    <input type="radio" id="opcao" name="opcao" value="8">
-                                    8
-                                </label>
-                        </div>
-                        <div class="halfRow">
-                            <input  class="usePipeline"
-                                    type="checkbox"
-                                    name="using-pipeline"
-                                    id="using-pipeline">
-                        </div>
-                    </div>
-                </div>
-
-                <!--Input / Output-->
-                <div class="cardHalf">
-                        <div class="halfCard">
-                            <div class="halfHead">
-                                <span class="input"></span> 
-                            </div>
-                            <div class="halfBody">
-                                <textarea name="code" id="input" cols="30" rows="10" class="code"></textarea>
-                            </div>
-                        </div>
-        
-                        <div class="halfCard">
-                            <div class="halfHead">
-                                <span class="output"></span> 
-                            </div>
-                            <div class="halfBody">
-                                <textarea name="code" id="output" cols="30" rows="10" class="code" readonly></textarea>
-                            </div>
-                        </div>
-                </div>
-            <div class="cardHead"></div>
-        </div>
-
-        <!--Terminal & Cache-->
-        <div id="switch" class="switch">
-            
+                    </td>
+                </tr>
+            </tbody> </table>
+                    
             <!--Terminal-->
-            <div id="terminal" class="switch-active"> 
-                <div class="darkCardHead">
-                    <button class="other-tab" onclick="switchTerminalCache()">
-                        Cache
-                    </button>
-                    <button class="active-tab">
-                        Terminal
-                    </button>
-                </div>
-                <div class="cardHead"></div>
+            <div class="cardHead texteditor"></div>
+            <div id="terminal" class="switch-active">
 
                 <!--Text Editor-->
                 <div class="cardFlow">
@@ -232,43 +164,13 @@
                 </div>
             </div>
 
-            <!--Cache-->
-            <div id="cache" class="switch-hidden">
-                <div class="darkCardHead">
-                    <button class="active-tab">
-                        Cache
-                    </button>
-                    <button class="other-tab" onclick="switchTerminalCache();">
-                        Terminal
-                    </button>
-                </div>
-                
-                <!--Cache Table-->
-                <div class="cache">
-                    <table id="cache-table" class="cache-table">
-                        <tbody id="cache-body"></tbody>
-                    </table>
-                    <div id="no-cache">
-                        <div class="cardHead nocache"></div>
-                    </div>
-                </div>
-                <div class="cardHead">
-                    <span class="cacheconsole"></span>
-                    <button type="submit" onclick="console.log('N FAz nadakkkkkkkkkk')" class="runButton clear"></button>
-                </div>
-                <div style="height: 20%;">
-                    <textarea   name="code"
-                                id="cache-console"
-                                cols="30"
-                                rows="10"
-                                class="code"
-                                readonly>
-                    </textarea>
-                </div>
-            </div>
+            <!--Console-->
             <div class="cardHead">
                 <span> Console </span>
                 <button type="submit" onclick="conso.clear()" class="runButton clear"></button>
+                <button id="console-resize" class="material-symbols-outlined roundButton">
+                    height
+                </button>
             </div>
             <div class="console">
                 <textarea   name="code"
@@ -276,9 +178,19 @@
                             cols="30"
                             rows="10"
                             class="code"
+                            style="height: 50px;"
                             readonly>
                 </textarea>
             </div>
+            
+            <!--Input / Output-->
+            <div class="cardHead input"></div>
+            <input name="code" id="input"  class="input-output" autocomplete="off" />
+                        
+            <div class="cardHead output"></div> 
+            <input name="code" id="output" class="input-output" autocomplete="off" readonly>
+
+            
             <div class="cardHead">
                 <label class="curcode"></label>:
                 <select id="code-examples" onclick="getPreviousCode()" onchange="pasteCodeExample()">
@@ -289,29 +201,129 @@
                     <!--<option value="countdownALT">Countdown ALT</option>-->
                 </select>
             </div>
+            
+        </div>
+
+        <!--Cache & Pipeline-->
+        <div id="switch" class="switch">
+            
+            <!--Cache-->
+            <div id="cache" class="switch-active">
+                
+                <div class="cardHead">
+                    <span class="usecache tooltip"></span>
+                    <input  class="useCache"
+                        type="checkbox"
+                        name="using-cache"
+                        id="using-cache" />
+                </div>
+
+                <div class="cardHead">
+                    <label>
+                        <input type="radio" id="opcao" name="opcao" value="2" checked>
+                        2
+                    </label>
+                    <label>
+                        <input type="radio" id="opcao" name="opcao" value="4">
+                        4
+                    </label>
+                    <label>
+                        <input type="radio" id="opcao" name="opcao" value="8">
+                        8
+                    </label>
+                </div>
+
+                <!--Cache Table-->
+                <div class="cache">
+                    <table id="cache-table" class="cache-table">
+                        <tbody id="cache-body"></tbody>
+                    </table>
+
+                    <div id="no-cache">
+                        <div class="cardHead nocache"></div>
+                    </div>
+                </div>
+                <div class="cardHead">
+                    <span class="cacheconsole"></span>
+                    <button type="submit" onclick="clearCacheTerminal()" class="runButton clear"></button>
+                </div>
+
+                <!--Cache Console-->
+                <div style="height: 20%;">
+                    <textarea   name="code"
+                                id="cache-console"
+                                cols="30"
+                                rows="10"
+                                class="code"
+                                readonly>
+                    </textarea>
+                </div>
+
+                <!--Pipeline-->
+                <div class="cardHead">
+                    <span class="usepipeline tooltip"></span>
+                    <input  class="usePipeline"
+                            type="checkbox"
+                            name="using-pipeline"
+                            id="using-pipeline">
+                </div>
+
+                <div class="pipeline-steps">
+
+                    <!--Fetch-->
+                    <div class="step">
+                        <div class="cardHead">
+                            <div style="color:#cfbf6e">&#9632;</div> <span class="fetch tooltip"></span>
+                        </div>
+                        <div class="step-body">
+                            <input class="pipeline-input" value="000" id="fetch-display" />
+                        </div>
+                    </div>
+        
+                    <!--Decode-->
+                    <div class="step">
+                        <div class="cardHead">
+                            <div style="color:#464d7b">&#9632;</div> <span class="decode tooltip"></span>
+                        </div>
+                        <div class="step-body">
+                            <input class="pipeline-input" value="000" id="decode-display" />
+                        </div>
+                    </div>
+        
+                    <!--Execute-->
+                    <div class="step">
+                        <div class="cardHead">
+                            <div style="color:#467b49">&#9632;</div> <span class="execute tooltip"></span>
+                        </div>
+                        <div class="step-body">
+                            <input class="pipeline-input" value="000" id="execute-display" />
+                        </div>
+                    </div>
+        
+                    <!--WriteBack-->
+                    <div class="step">
+                        <div class="cardHead">
+                            <div style="color:#83558a">&#9632;</div> <span class="writeback tooltip"></span>
+                        </div>
+                        <div class="step-body">
+                            <input class="pipeline-input" value="000" id="writeback-display" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="cardHead"></div>
+            </div>
         </div>
 
         <!--RAM-->
         <div class="randomAcessMemory">
             <div class="cardHead">
-                <span class="ramname"></span>
+                <span class="ramname tooltip"></span>
             </div>
             <div class="cardBody">
-
-                <!--RAM Table-->
                 <table id="slots" class="ramTable"></table>
-
-                <!--Colors-->
-                <div class="cardHead">
-                    <div style="color:#cfbf6e">&#9632;</div> <span class="fetch"></span>
-                    <div style="color:#464d7b">&#9632;</div> <span class="decode"></span>
-                    <div style="color:#467b49">&#9632;</div> <span class="execute"></span>
-                    <div style="color:#7b4657">&#9632;</div> <span class="updatecache"></span>
-                </div>
             </div>
             <div class="cardHead">
-                <button type="submit" onclick="load()" class="runButton loadtoram"></button>
-                <button type="submit" onclick="run()" class="runButton runcode"></button>
             </div>
         </div>
     </div>
@@ -346,4 +358,17 @@
 <!--
 <span style="font-size: small;"> Color: </span>
 <input type="color" id="colorPicker" value="#464d7b" onchange="changeColor()" class="color">
+-->
+
+<!--
+    <div style="color:#7b4657">&#9632;</div> <span class="updatecache"></span>
+-->
+
+<!--
+    <div class="halfRow">
+        
+    </div>
+    <div class="halfRow">
+            
+    </div>
 -->

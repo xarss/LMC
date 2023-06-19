@@ -2,7 +2,6 @@ var cardState = true;
 const defaultLanguage = "english";
 var currentLanguage = defaultLanguage;
 
-// var clockSpeed   = document.getElementById("slider").value;
 var clockSpeed = 1000;
 var previousCode = "custom";
 
@@ -17,7 +16,6 @@ function Overlay() {
         current.style.display = "block";
     }
 }
-
 
 function slotter(index) {
     const slot = document.createElement('td');
@@ -46,9 +44,9 @@ function slotter(index) {
 
 function setClockSpeed()
 {
-    document.getElementById('clockInput').value = document.getElementById('slider').value;
-    clockSpeed = 700 - 500 * ((document.getElementById("clockInput").value - 0.1) / 10);
-    document.getElementById("current-clock-speed").innerHTML = (document.getElementById('clockInput').value/10).toFixed(1);
+    let sliderValue = document.getElementById("slider").value;
+    clockSpeed = 1000 - 900 * ((sliderValue - 1) / 10);
+    document.getElementById("current-clock-speed").innerHTML = (sliderValue/10).toFixed(1);
 }
 
 function generateGrid() {
@@ -237,7 +235,7 @@ function pasteCodeExample()
 }
 
 document.getElementById('code').addEventListener('keydown', function(e) {
-  if (e.key === 'Tab' || e.key === ' ') {
+  if (e.key === 'Tab') {
     e.preventDefault();
     const startPos = this.selectionStart;
     const endPos = this.selectionEnd;
@@ -247,6 +245,48 @@ document.getElementById('code').addEventListener('keydown', function(e) {
   }
 });
 
+const consoleElement = document.getElementById("console");
+const consoleResize = document.getElementById("console-resize");
+
+let resizing = false;
+let lastMouseY;
+
+function initResize(e) {
+    resizing = true;
+    lastMouseY = e.clientY;
+    window.addEventListener('mousemove', Resize, false);
+    window.addEventListener('mouseup', stopResize, false);
+}
+
+function Resize(e) {
+    if (!resizing) return;
+
+    requestAnimationFrame(() => {
+        let deltaY = e.clientY - lastMouseY;
+        
+        const terminal = document.getElementById("terminal")
+        
+        if(deltaY < 0)
+        {
+            deltaY = Math.abs(deltaY) > terminal.offsetHeight ? 0 : deltaY;
+        }
+        
+        let newHeight = parseInt(getComputedStyle(consoleElement).height) - deltaY;
+
+        const terminalElement = document.getElementById("console");
+
+        consoleElement.style.height = `${newHeight}px`;
+        lastMouseY = e.clientY;
+    });
+}
+
+function stopResize(e) {
+    resizing = false;
+    window.removeEventListener('mousemove', Resize, false);
+    window.removeEventListener('mouseup', stopResize, false);
+}
+
+consoleResize.addEventListener('mousedown', initResize, false);
 
 setClockSpeed();
 generateGrid();

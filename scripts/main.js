@@ -15,15 +15,17 @@ var currentTheme = "dark";
 
 // Machine Cycle 
 
-var myCache = null;
-var fetchedData = []
-var decodedData = []
-var canFetch    = true;
-var executePos  = null;
+var myCache       = null;
+var fetchedData   = []
+var decodedData   = []
+var canFetch      = true;
+var executePos    = null;
 var usingPipeline = false;
-var usingCache  = false;
-var inputs = [];
+var usingCache    = false;
+var inputs        = [];
+var writebackData = [];
 
+var heat = 0;
 
 // KEYWORD => OPCODE
 const generators = 
@@ -36,10 +38,10 @@ const generators =
     BRP: (label) => "8" + labels[label],
     BRZ: (label) => "7" + labels[label],
 
-    ADD: (value) => "1" + (value in variables ? variables[value] : value),
-    SUB: (value) => "2" + (value in variables ? variables[value] : value),
-    STA: (value) => "3" + (value in variables ? variables[value] : value),
-    LDA: (value) => "5" + (value in variables ? variables[value] : value)
+    ADD: (value) => "1" + (Object.keys(variables).includes(value) ? variables[value] : value),
+    SUB: (value) => "2" + (Object.keys(variables).includes(value) ? variables[value] : value),
+    STA: (value) => "3" + (Object.keys(variables).includes(value) ? variables[value] : value),
+    LDA: (value) => "5" + (Object.keys(variables).includes(value) ? variables[value] : value)
 }
 
 // BRA
@@ -80,29 +82,36 @@ functions["7"] = async function(newPos)
     canFetch = true;
 };
 
-// INP & OUT
+// INP & OUT (writeback)
 functions["9"] = async function(value) 
 {
+    //Input
     if(value == "01")
     {
+        document.getElementById('accum').style.backgroundColor = cpuColors['accumulator'];
         if (inputs.length > 0)
         {
             let input = inputs.shift();
             accum.set(input);
             conso.log(text[currentLanguage]['consoleinput'](input));
         }
+        //Input without argument
         else
         {
-            conso.log(text[currentLanguage]['consoleinput'](0));
             accum.set(0);
+            conso.log(text[currentLanguage]['consoleinput'](0));
         }
+        const display = document.getElementById("writeback-display");
+        display.value = accum.get();
     }
+    //Output
     else
     {
         let outputValue = accum.get();
         conso.log(text[currentLanguage]['consoleoutput'](outputValue));
-        document.getElementById("output").value += outputValue + "\n";
+        document.getElementById("output").value += outputValue + " ";
     }
+    updateMDR();
 }
 
 // HLT
@@ -112,20 +121,30 @@ functions["0"] = async function()
     pos = -1;
 }
 
-// ADD
+// ADD (writeback)
 functions["1"] = async function(p) 
 {
     let value = ram.get(p);
+    document.getElementById('accum').style.backgroundColor = cpuColors['accumulator'];
     conso.log(text[currentLanguage]['consoleadd'](value));
     accum.set(parseInt(accum.get()) + parseInt(value));
+    const display = document.getElementById("writeback-display");
+    display.value = accum.get();
+    updateMDR();
+    updateMAR((pos - 1).toString(2).padStart(7, "0"));
 }
 
-// SUB
+// SUB (writeback)
 functions["2"] = async function(p) 
 {
     let value = ram.get(p);
+    document.getElementById('accum').style.backgroundColor = cpuColors['accumulator'];
     conso.log(text[currentLanguage]['consolesub'](value));
     accum.set(parseInt(accum.get()) - parseInt(value));
+    const display = document.getElementById("writeback-display");
+    display.value = accum.get();
+    updateMDR();
+    updateMAR((pos - 1).toString(2).padStart(7, "0"));
 }
 
 // STA
@@ -134,16 +153,63 @@ functions["3"] = async function(p)
     let value = accum.get();
     conso.log(text[currentLanguage]['consolesta'](p, value));
     ram.add(p, value);
+    updateMDR();
+    updateMAR((pos - 1).toString(2).padStart(7, "0"));
 }
 
-// LDA
+// LDA (writeback)
 functions["5"] = async function(p) 
 {
+    document.getElementById('accum').style.backgroundColor = cpuColors['accumulator'];
     conso.log(text[currentLanguage]['consolelda'](p));
     accum.set(ram.get(p));
+    const display = document.getElementById("writeback-display");
+    display.value = accum.get();
+    updateMDR();
+    updateMAR((pos - 1).toString(2).padStart(7, "0"));
 }
 
 // ------------------------------------------------ //
+
+updateMDR = () => {
+    document.getElementById("memory-data-register").value = accum.get();
+}
+
+updateMAR = (data) => {
+    document.getElementById("memory-address-register").value = data;
+}
+
+updateCIR = (address) => {
+    document.getElementById("current-instruction-register").value = address;
+}
+
+function opcode2String(opcode)
+{
+    const opcodes = 
+    {
+        "0": "HALT",
+        "1": "ADD",
+        "2": "SUB",
+        "3": "STA",
+        "5": "LDA",
+        "6": "BRA",
+        "7": "BRZ",
+        "8": "BRP"
+    }
+
+    if (opcode == "901")
+    {
+        return "INP";
+    }
+    if (opcode == "902")
+    {
+        return "OUT";
+    }
+
+    let char = opcode.toString().charAt(0);
+
+    return opcodes[char];
+}
 
 function tuc(str, index) 
 { 
@@ -161,8 +227,8 @@ function lowCounter(lista)
 
     for (let i = 1; i < lista.length; i++) {
         if (lista[i].counter < menorValor) {
-        menorValor = lista[i].counter;
-        indiceMenor = i;
+            menorValor = lista[i].counter;
+            indiceMenor = i;
         }
     }
 
@@ -227,7 +293,7 @@ class CacheMemory {
             const slot = document.getElementById('h_' + newPos);
             slot.style.backgroundColor = instructionColors["cache"];
             tRow.style.backgroundColor = instructionColors["cache"];
-            await sleep(50);
+            await sleep(clockSpeed/2);
             tRow.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(theme[currentTheme]['--main']); 
             slot.style.backgroundColor = getComputedStyle(document.documentElement).getPropertyValue(theme[currentTheme]['--main']); 
         }
@@ -251,7 +317,7 @@ class CacheMemory {
 
     storeCache(address)
     {
-        let mypos = parseInt(address, 2);
+        let mypos = parseInt(address, 2) + 1;
         for(let i = 0; i < this.num_linhas; i++)
         {
             let cAddress = (mypos + i).toString(2).padStart(7, "0");
@@ -319,9 +385,12 @@ ram.newSlot = () =>
     return index;
 }
 
-ram.clear = () =>
+ram.clear = (out = true) =>
 {
-    document.getElementById("output").value = "";
+    if (out)
+    {
+        document.getElementById("output").value = "";
+    }
     variables = {};
     labels = {};
     pos = 0;
@@ -331,6 +400,8 @@ ram.clear = () =>
     executePos = null;
     generateGrid();
     myCache = null;
+    executePos = null;
+    inputs = [];
 }
 
 accum.get = () =>
@@ -388,10 +459,13 @@ async function slotSelect(p, color, cacheOn = false)
 
 async function fetch()
 {
+    const display = document.getElementById('fetch-display');
     if (canFetch)
     {
         pos = parseInt(pos);
         let fetchedAddress = pos.toString(2).padStart(7, "0"); // Pega o id do slot e transforma em binário de 7 bits
+        updateCIR(fetchedAddress);
+        conso.log(text[currentLanguage]["fetching"](fetchedAddress));
         if(usingCache && myCache !== null)
         {
             if(await myCache.accessCache(pos.toString(2).padStart(7, "0")) == 'hit')
@@ -399,6 +473,7 @@ async function fetch()
                 await slotSelect(pos, instructionColors["fetch"], true);
                 fetchedData.push(fetchedAddress); // Guarda na lista de fetch
                 canFetch = false;
+                display.value = fetchedAddress;
                 return;
             }
             else
@@ -411,21 +486,14 @@ async function fetch()
             await slotSelect(pos, instructionColors["fetch"]);
         }
         fetchedData.push(fetchedAddress); // Guarda na lista de fetch
-        if (currentLanguage == 'english')
-        {
-            conso.log("Fetched: "+ fetchedAddress);
-        }
-        else
-        {
-            conso.log("Resgatado: "+ fetchedAddress);
-        }
+        display.value = fetchedAddress;
         canFetch = false;
     }
 }
 
 async function decode()
 {
-    // 6 - 7 - 8 -> BRs
+    const display = document.getElementById('decode-display');
     if (fetchedData[0] !== null && fetchedData[0] !== undefined)
     {
         let codedAddress = fetchedData.splice(0, 1); // Pega a instrução na ram em formato binário.
@@ -439,37 +507,84 @@ async function decode()
         {
             conso.log("Decodificado: "+ decodedAddress);
         }
-        let firstDigit = parseInt(decodedAddress.toString().charAt(0))
-        if (![6, 7, 8, 0].includes(firstDigit)) // Se for branch ou halt
+        let firstDigit = decodedAddress.toString().charAt(0);
+        if (!['6', '7', '8', '0'].includes(firstDigit)) // Se não for branch ou halt
         {
             pos++;
             canFetch = true;
         }
         await slotSelect(executePos, instructionColors["decode"]);
+        display.value = decodedAddress;
         decodedData.push(decodedAddress); // Guarda a instrução na lista de instruções
     }
 }
 
 async function execute()
 {
+    const display = document.getElementById('execute-display');
     if (decodedData[0] !== null && decodedData[0] !== undefined)
     {
         let rawInstruction = decodedData.splice(0, 1);
         let [func, param] = cut(rawInstruction[0], 1);
-        if ([6,7,8].includes(func))
+        if (['6','7','8'].includes(func))
         {
             functions[func](param);
-            await slotSelect(executePos, instructionColors["execute"]); //Verde
+            await slotSelect(executePos, instructionColors["execute"]);
+            document.getElementById('accum').style.backgroundColor = 'transparent';
+            display.value = opcode2String(func + param);
+            return;
+        }
+        //If Writeback, call writeback function, return
+        if (['9','1','2','5'].includes(func))
+        {
+            conso.log("Sending to writeback");
+            writebackData.push({"func": func, "param": param});
+            await slotSelect(executePos, instructionColors["execute"]);
+            document.getElementById('accum').style.backgroundColor = 'transparent';
+            display.value = opcode2String(func + param);
             return;
         }
         functions[func](param);
-        await slotSelect(executePos, instructionColors["execute"]); //Verde
+        await slotSelect(executePos, instructionColors["execute"]);
+        display.value = opcode2String(func + param);
+        document.getElementById('accum').style.backgroundColor = 'transparent';
+    }
+}
+
+async function writeback()
+{
+    if (writebackData[0] !== null && writebackData[0] !== undefined)
+    {
+        if (usingPipeline)
+        {
+            let data = writebackData.shift();
+            let writeSlot = executePos - 1;
+            functions[data.func](data.param);
+            await slotSelect(writeSlot, instructionColors["writeback"]);
+        }
+        else
+        {
+            let data = writebackData.shift();
+            let writeSlot = executePos;
+            functions[data.func](data.param);
+            await slotSelect(writeSlot, instructionColors["writeback"]);
+        }
+    }
+}
+
+function haltCode()
+{
+    if (pos > 0)
+    {
+        pos = -1;
+        conso.log(text[currentLanguage]["manualhalt"])
     }
 }
 
 async function run()
 {   
-    inputs = document.getElementById('input').value.split(" ");
+    load();
+    inputs = document.getElementById('input').value.split(/[\s\n]+/);
     inputs = inputs.filter(element => element != "");
     let allInt = true;
 
@@ -484,7 +599,7 @@ async function run()
 
     if (!allInt) 
     {
-        window.alert(text[currentLanguage]["invalidinputs"]);
+        conso.log(text[currentLanguage]["invalidinputs"]);
         return;
     } 
 
@@ -494,29 +609,32 @@ async function run()
     {
         if (pos == initVarPos)
         {
-            window.alert(text[currentLanguage]["missinghalt"]);
+            conso.log([currentLanguage]["missinghalt"]);
             break;
         }
         if (!usingPipeline) 
         {
-            await fetch()
-            await decode()
-            await execute()
+            await fetch();
+            await decode();
+            await execute();
+            await writeback();
         }
         else
         {
-            await Promise.all([execute(), decode(), fetch()]);
+            await Promise.all([writeback(), execute(), decode(), fetch()]);
         }
     }
+    pos = 0;
     const end = performance.now();
     conso.log(text[currentLanguage]['executiontime'](start, end));
+    ram.clear(out=false);
 }
 
 function process(line, cl)
 {
-    if(line[0].includes(":"))
+    if(!(Object.keys(generators).includes(line[0])) && line[1] != "DAT")
     {
-        LABEL(line.shift().replace(":", ""), cl);
+        LABEL(line.shift(), cl);
     }
     if(line.length == 1)
     {
@@ -531,7 +649,6 @@ function process(line, cl)
     return line
 }
 
-// Was named compile, but load is a better description
 function load()
 {
     ram.clear();
@@ -559,10 +676,15 @@ function load()
     }
 }
 
+function clearCacheTerminal()
+{
+    document.getElementById("cache-console").value = "";
+}
+
 function getCheckedRadioValue(name) 
 {
     var radioButtons = document.querySelectorAll('input[type="radio"][name="' + name + '"]');
     var checkedButton = Array.from(radioButtons).find(radio => radio.checked);
     return checkedButton ? checkedButton.value : null;
-}
-  
+}   
+

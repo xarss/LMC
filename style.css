@@ -11,6 +11,28 @@
     height: 100%;
 }
 
+.input-output, .pipeline-input
+{
+    border: none;
+    color: var(--text);
+    font-size: large;
+    box-sizing: border-box;
+    padding-left: 10px;
+    background-color: var(--main-dark);
+}
+
+.pipeline-input
+{
+    text-align: center;
+    height: 100%;
+    width: 100%;
+}
+
+.input-output:focus
+{
+    outline: none;
+}
+
 .code:focus
 {
     outline: none;
@@ -53,7 +75,7 @@
     height: 60%;
 }
 
-.cardHead, .darkCardHead
+.cardHead, .darkCardHead, .cardLine
 {
     width: 100%;
     display: flex;
@@ -62,6 +84,11 @@
     height: 30px;
     min-height: 30px;
     background-color: var(--main);
+}
+
+.cardLine
+{
+    background-color: var(--main-dark);
 }
 
 .darkCardHead
@@ -117,7 +144,7 @@
 .switch
 {
     margin-left: 20px;
-    width: 25%;
+    width: 35%;
     display: flex;
     flex-direction: column;
     border-radius: 10px;
@@ -163,10 +190,68 @@
     background-color: var(--main);
 }
 
+.tooltip
+{
+    position: relative;
+    /*display: inline-block;*/
+}
+
+.tooltip .tooltiptext
+{
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 20px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: 50%;
+    margin-left: -1.0em;
+    width: 300%;
+}
+
+.tooltip .tooltiptext-up {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 20px;
+    position: absolute;
+    z-index: 1;
+    top: -500%;
+    left: 50%;
+    width: 300%;
+}
+
+.tooltip .tooltiptext-left {
+    visibility: hidden;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 20px;
+    position: absolute;
+    z-index: 1;
+    top: 150%;
+    left: -100%;
+    margin-left: -1.0em;
+    width: auto;
+    max-width: 250%;
+}
+
+
+.tooltip:hover .tooltiptext, .tooltip:hover .tooltiptext-up, .tooltip:hover .tooltiptext-left
+{
+    visibility: visible;
+}
+
 .randomAcessMemory
 {
     margin-left: 20px;
-    width: 50%;
+    width: 40%;
     border-radius: 10px;
     background-color: var(--main);
 }
@@ -249,14 +334,12 @@
     height: 100%;
 }
 
-
-
 .ramTable
 {
     background-color: var(--main-dark);
     padding: 0;
     width: 100%;
-    height: calc(100% - 30px);
+    height: 100%;
 }
 
 .slotHeader, .selected-slotHeader
@@ -399,6 +482,11 @@
     background-color: rgba(0,0,0,0.1);
 }
 
+.has-border
+{
+    border: solid 1px var(--text);
+}
+
 .roundButton:hover
 {
     cursor: pointer;
@@ -425,6 +513,29 @@
     background-color: var(--main);
     padding: 0;
     border-radius: 5px;
+}
+
+.pipeline-steps
+{
+    display: flex;
+    height: 60px;
+}
+
+.cpu-table
+{
+    border: none;
+}
+
+.cpu-table th
+{
+    height: 30px;
+}
+
+.cpu-table td
+{
+    height: 30px;
+    background-color: var(--main-dark);
+    border: none;
 }
 
 .info-table-body
@@ -490,6 +601,27 @@
 .title
 {
     font-size: large;
+}
+
+.ram-pipeline
+{
+    width    : 100%;
+    flex-grow: 1;
+    display  : flex
+}
+
+.step
+{
+    width: 25%;
+    flex-grow: 1;
+}
+
+.step-body
+{
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .switch-left-active,

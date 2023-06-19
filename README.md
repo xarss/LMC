@@ -10,7 +10,7 @@
   | <a href="https://xarss.github.io/LMC/" target="_blank"> Simulator </a>
   | [Commands](#commands-and-structure)
 
-  <img src="https://img.shields.io/badge/Version-0.9-303060"/>
+  <img src="https://img.shields.io/badge/Version-1.0-303060"/>
   <img src="https://img.shields.io/badge/Status-Under%20Development-9cf"/>
 
  </div>
@@ -38,7 +38,7 @@ This code takes one input and counts from it to 0.
 
 ```js
 	INP
-loop:	OUT
+loop	OUT
 	STA count
 	SUB one
 	STA count
@@ -69,14 +69,14 @@ To create a label, type any name followed by ":" and the first command that shou
 ### Creating labels
 ```bash
 #Label named "label1"
-label1:   OUT
+label1    OUT
           HLT
 
 #Label named "label2"
-label2:   HLT
+label2    HLT
 
 #Label named "anyname"
-anyname:  INP
+anyname   INP
           HLT
 ```
 
@@ -298,7 +298,7 @@ Will always branch to the specified label
 ```bash
       BRA exit
 
-exit: HLT
+exit  HLT
 ```
 
 ### Branch if Positive
@@ -315,7 +315,7 @@ Will only branch to the specified label if the accumulator value is positive.
 # Accumulator value: 1
       BRP exit
 
-exit: HLT
+exit  HLT
 ```
 
 ### Branch if Zero
@@ -332,7 +332,7 @@ Will only branch to the specified label if the accumulator value is positive.
 # Accumulator value: 0
       BRZ exit
 
-exit: HLT
+exit  HLT
 ```
 ## Halt
 
