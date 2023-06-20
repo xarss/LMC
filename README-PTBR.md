@@ -12,6 +12,7 @@
 
   <img src="https://img.shields.io/badge/Versão-1.0-303060"/>
   <img src="https://img.shields.io/badge/Status-Em%20Desenvolvimento-9cf"/>
+  <img src="https://img.shields.io/badge/Compatibilidade-Desktop-9cf"/>
 
  </div>
 
